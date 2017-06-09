@@ -62,9 +62,10 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
             print("EmergencyVC\n",terminator: "")
             nowVCname="緊急通報"
             self.openViewControllerBasedOnIdentifier("EmergencyVC")
-        /*case 7:
-            print("SettingVC\n",terminator: "")
-            self.openViewControllerBasedOnIdentifier("SettingVC")*/
+        case 7:
+            print("LoginVC\n",terminator: "")
+            nowVCname="登入頁面"
+            self.openViewControllerBasedOnIdentifier("LoginVC")
             
         default:
             self.title=nowVCname
@@ -191,7 +192,7 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
     
     func onSlideMenuButtonPressed(_ sender : UIButton){
         //nowVCname=self.title! as String
-        self.title="校園無所不導"
+        self.title="iGuiding"
         if (sender.tag == 10)
         {
             // To Hide Menu If it already there

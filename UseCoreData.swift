@@ -20,8 +20,7 @@ class UseCoreData{
     }
     
     // MARK: - Core Data stack
-    
-    static var persistentContainer: NSPersistentContainer = {
+     static var persistentContainer: NSPersistentContainer = {
         /*
          The persistent container for the application. This implementation
          creates and returns a container, having loaded the store for the

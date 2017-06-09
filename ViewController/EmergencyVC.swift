@@ -10,6 +10,18 @@ import UIKit
 
 class EmergencyVC: BaseViewController {
 
+    @IBAction func CallTeacher(_ sender: Any) {
+        let phoneNumber = URL(string:"tel://0424515502")!
+        UIApplication.shared.open(phoneNumber, options: [:], completionHandler: nil)
+        
+    }
+    
+    @IBAction func CallPolice(_ sender: Any) {
+        let phoneNumber = URL(string:"tel://110")!
+        UIApplication.shared.open(phoneNumber, options: [:], completionHandler: nil)
+    }
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.addSlideMenuButton()
