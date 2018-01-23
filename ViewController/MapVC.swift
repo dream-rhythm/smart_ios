@@ -22,20 +22,22 @@ class MapVC: BaseViewController, CLLocationManagerDelegate{
        
         locationManager.delegate = self
         
+        
         if CLLocationManager.isMonitoringAvailable(for: CLBeaconRegion.self){
             if CLLocationManager.authorizationStatus() != CLAuthorizationStatus.authorizedAlways{
                 locationManager.requestAlwaysAuthorization()
             }
         }
-        
-        
+        //var test = LocationRegion()
+        //var test2 = GeoNode(logitude: <#T##Double#>, latitude: <#T##Double#>)
         self.view = sailsMapView
         sails.setSailsLocationMapView(sailsMapView)
-        sails.loadCloudBuilding("f97a3d71447844c8be7d66b5d1934e42", buildingID: "58abadf5cb4a9a2b09000162", success: (() -> Void)!{
+        sails.loadCloudBuilding("11368c21cf464c1aa587b7ede79aab8b", buildingID: "5405920d1ff15731210001f3", success: (() -> Void)!{
             self.sails.startLocatingEngine()
             let floorNameList = self.sails.getFloorNameList()
-            self.sailsMapView.loadFloorMap(floorNameList?[1] as! String!)
+            self.sailsMapView.loadFloorMap(floorNameList?[0] as! String!)
             self.sailsMapView.startAnimation(toZoom: 18)
+            self.view.backgroundColor = UIColor.white
         }, failure: {(e:Error?)in })
         
         /*

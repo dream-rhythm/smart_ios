@@ -57,7 +57,7 @@
  * Load building project from cloud.
  *
  * @param token developer's token. (To get the token, you should get SAILS developer identity on our cloud.)
- * @param buildingId building id (can get building id on our cloud)
+ * @param buildingid building id (can get building id on our cloud)
  * @param success is called when procedure is completed.
  * @param failure is called when load building failed, see the response for detailed information.
  */
@@ -224,7 +224,7 @@
  * @param lat1 start location's latitude.
  * @param lon2 end location's longitude.
  * @param lat2 end location's latitude.
- * @return
+ * @return double number
  */
 - (double)getBearDegree:(double)lon1 latitude1:(double)lat1 longitude2:(double)lon2 latitude2:(double)lat2;
 
@@ -232,9 +232,9 @@
 /**
  * Calculate two different (lat,lon) distance.
  *
- * @param lng1 start location's longitude.
+ * @param lon1 start location's longitude.
  * @param lat1 start location's latitude.
- * @param lng2 end location's longitude.
+ * @param lon2 end location's longitude.
  * @param lat2 end location's latitude.
  *
  * @return calculated distance in meters.
@@ -264,8 +264,8 @@
  * Get filtered LocationRegions for the specified floor by user specified type or subtype.
  *
  * @param floorName name of the specified floor.
- * @param type value in "type" tag in JOSM tag setting.
- * @param subtype value in "subtype" tag in JOSM tag setting. (must be null when type param is also set to null)
+ * @param aType value in "type" tag in JOSM tag setting.
+ * @param aSubtype value in "subtype" tag in JOSM tag setting. (must be null when type param is also set to null)
  * @return a filtered location region NSArray.
  */
 - (NSArray *)getFilteredLocationRegionList:(NSString *)floorName type:(NSString *)aType subtype:(NSString *)aSubtype;

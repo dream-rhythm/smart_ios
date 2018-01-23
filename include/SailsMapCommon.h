@@ -47,9 +47,9 @@
  /**
   *  Initialization PixelPoint
   *
-  *  @param Pointx X of PixelPoint
+  *  @param pointx X of PixelPoint
   *
-  *  @param Pointy Y of PixelPoint
+  *  @param pointy Y of PixelPoint
   *
   *  @return id
   */
@@ -387,7 +387,7 @@ typedef NS_ENUM(NSInteger, SailsMapControlMode) {
 /**
  * Move the map to specified focus location with animation.
  *
- * @param target input location by GeoPoint format.
+ * @param targetpoint input location by GeoPoint format.
  */
 - (BOOL)startMoveMapAnimationWithTarget:(GeoPoint *)targetpoint;
 
@@ -395,7 +395,7 @@ typedef NS_ENUM(NSInteger, SailsMapControlMode) {
 /**
  * Set map rotation angle with animation.
  *
- * @param angle input angle value by degree. (Note 0 degree is the phone view north)
+ * @param targetangle input angle value by degree. (Note 0 degree is the phone view north)
  */
 - (BOOL)startRotateMapAnimationWithTarget:(float)targetangle;
 

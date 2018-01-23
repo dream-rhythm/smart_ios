@@ -18,6 +18,12 @@ class StreamVC: BaseViewController {
     let screenSize: CGRect = UIScreen.main.bounds
     let myWebView = UIWebView()
     
+    @IBOutlet weak var PIC1: UIButton!
+    @IBOutlet weak var Buttom1: UIButton!
+    @IBOutlet weak var PIC2: UIButton!
+    @IBOutlet weak var Buttom2: UIButton!
+    @IBOutlet weak var PIC3: UIButton!
+    @IBOutlet weak var Buutom3: UIButton!
     
     @IBAction func map(_ sender: Any) {
         self.openViewControllerBasedOnIdentifier("MapVC")
@@ -50,12 +56,20 @@ class StreamVC: BaseViewController {
         super.viewDidLoad()
         self.addSlideMenuButton()
         self.title="即時畫面"
-        myWebView.frame=CGRect(x: 0, y: 57, width: screenSize.width, height: screenSize.height/3)
+        myWebView.frame=CGRect(x: 0, y: 57, width: screenSize.width, height: screenSize.height/3*2)
+        PIC1.frame=CGRect(x: screenSize.width/2-95, y: screenSize.height/3*2+80, width: 40, height: 40)
+        Buttom1.frame=CGRect(x: screenSize.width/2-70, y: screenSize.height/3*2+65, width: 200, height: 72)
+        
+        PIC2.frame=CGRect(x: screenSize.width/2-95, y: screenSize.height/3*2+130, width: 40, height: 40)
+        Buttom2.frame=CGRect(x: screenSize.width/2-70, y: screenSize.height/3*2+115, width: 200, height: 72)
+        
+        PIC3.frame=CGRect(x: screenSize.width/2-95, y: screenSize.height/3*2+180, width: 40, height: 40)
+        Buutom3.frame=CGRect(x: screenSize.width/2-70, y: screenSize.height/3*2+165, width: 200, height: 72)
         //myWebView.delegate = self
         self.view.addSubview(myWebView)
         //let url = NSURL(string:"http:192.168.0.101:8080"!)
         var url = self.getIPaddress()
-        url = "http://"+url + ":8080"
+        url = "http://"+url + "/iGuiding/stream2.html"
         print(url)
         let urlRequest = NSURLRequest(url: URL(string: url)!)
         myWebView.loadRequest(urlRequest as URLRequest)
@@ -80,11 +94,11 @@ class StreamVC: BaseViewController {
                 ipAddress = result[0].serverIP!
             }
             else{
-                ipAddress="192.168.0.1"
+                ipAddress="49.213.156.148"
             }
             
         }catch{
-            ipAddress="192.168.0.1"
+            ipAddress="49.213.156.148"
             print("err\n")
         }
         return ipAddress

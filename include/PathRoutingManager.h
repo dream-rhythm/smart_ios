@@ -199,8 +199,8 @@ typedef NS_ENUM(NSInteger, PathRoutingDirection) {
  * Call back path distance to current nearest transfer in the same floor.
  * (function work only when location engine is turn on)
  *
- * @param distance path distance
- * @param nodeType  nearest transfer type.
+ * @param block path distance
+ * @param block  nearest transfer type.
  */
 - (void)setOnRoutingUpdateReachNearestTransferDistanceRefreshBlock:(void (^)(int distance, PathRoutingNodeType nodeType))block;
 
@@ -208,8 +208,8 @@ typedef NS_ENUM(NSInteger, PathRoutingDirection) {
 /**
  * Update each floor change information. (function work only when location engine is turn on)
  *
- * @param infoList return info list.
- * @param nearestIndex return the index position which is corresponding to current nearest transfer node.
+ * @param block return info list.
+ * @param block return the index position which is corresponding to current nearest transfer node.
  */
 - (void)setOnRoutingUpdateSwitchFloorInfoRefreshBlock:(void (^)(NSArray *infoList, int nearestIndex))block;
 

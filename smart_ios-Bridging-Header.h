@@ -9,3 +9,5 @@
 #import "PinMarkerManager.h"
 #import "Sails.h"
 #import "SailsMapCommon.h"
+#import "MapViewController.h"
+#import "Friend2.h"

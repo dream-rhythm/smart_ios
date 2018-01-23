@@ -33,40 +33,43 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
             nowVCname="首頁"
             self.openViewControllerBasedOnIdentifier("Home")
             
-        case 1:
+        case 2:
             print("MapVC\n", terminator: "")
             nowVCname="室內地圖"
             self.openViewControllerBasedOnIdentifier("MapVC")
             
-        case 2:
+        case 3:
             print("NagivationVC\n", terminator: "")
             nowVCname="定位導引"
             self.openViewControllerBasedOnIdentifier("NagivationVC")
             
-        case 3:
+        case 4:
             print("FindFriendVC\n",terminator:"")
             nowVCname="尋找夥伴"
             self.openViewControllerBasedOnIdentifier("FindFriendVC")
             
-        case 4:
+        case 5:
             print("StudentVC\n", terminator: "")
             nowVCname="學生關懷"
             self.openViewControllerBasedOnIdentifier("StudentVC")
             
-        case 5:
+        case 6:
             print("StreamVC\n",terminator: "")
             nowVCname="即時畫面"
             self.openViewControllerBasedOnIdentifier("StreamVC")
             
-        case 6:
+        case 7:
             print("EmergencyVC\n",terminator: "")
             nowVCname="緊急通報"
             self.openViewControllerBasedOnIdentifier("EmergencyVC")
-        case 7:
+        case 1:
             print("LoginVC\n",terminator: "")
             nowVCname="登入頁面"
             self.openViewControllerBasedOnIdentifier("LoginVC")
-            
+        case 8:
+            print("Mybaby")
+            nowVCname="我的寶貝"
+            self.openViewControllerBasedOnIdentifier("Mybaby")
         default:
             self.title=nowVCname
             print("default\n", terminator: "")
@@ -144,6 +147,30 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
             
         }catch{
             print("err\n")
+            
+            
+            let SettingBox2 :UIAlertController = UIAlertController(title: "網路IP設定", message: "請輸入伺服器IP", preferredStyle: .alert)
+            
+            SettingBox2.addTextField {
+                (textField: UITextField!) -> Void in
+                textField.placeholder = "192.168.0.1"
+                textField.text = ipAddress
+            }
+            
+            SettingBox2.addAction(UIAlertAction(title: "取消",style: .cancel,handler: nil))
+            
+            let okAction = UIAlertAction(title:"確定",style: UIAlertActionStyle.default){
+                (action: UIAlertAction!) -> Void in
+                let IPAddress = (SettingBox2.textFields?.first)! as UITextField
+                let data = Settings(context:UseCoreData.persistentContainer.viewContext)
+                data.serverIP = IPAddress.text
+                UseCoreData.saveContext()
+            }
+            
+            SettingBox2.addAction(okAction)
+            
+            self.present(SettingBox2,animated:true,completion:nil)
+
         }
     }
 

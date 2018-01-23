@@ -33,6 +33,10 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
     *  Menu button which was tapped to display the menu
     */
     var btnMenu : UIButton!
+    var loginName = ""
+    public func setLoginName(name:String){
+        loginName = name
+    }
     
     /**
     *  Delegate of the MenuVC
@@ -56,15 +60,31 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func updateArrayMenuOptions(){
-        arrayMenuOptions.append(["title":"首頁", "icon":"Home"])
-        arrayMenuOptions.append(["title":"校園地圖", "icon":"Map"])
-        arrayMenuOptions.append(["title":"定位導引","icon":"Navi"])
-        arrayMenuOptions.append(["title":"尋找夥伴","icon":"Friends"])
-        arrayMenuOptions.append(["title":"學生關懷","icon":"Video"])
-        arrayMenuOptions.append(["title":"即時畫面","icon":"Stream"])
-        arrayMenuOptions.append(["title":"緊急通報","icon":"Exit"])
-        arrayMenuOptions.append(["title":"登入頁面","icon":"Exit"])
+        
+        arrayMenuOptions.append(["title":"首頁", "icon":"HomeIcon"])
+        arrayMenuOptions.append(["title":"登入","icon":"LoginIcon"])
+        arrayMenuOptions.append(["title":"校園地圖", "icon":"MapIcon"])
+        arrayMenuOptions.append(["title":"定位導引","icon":"NagivationIcon"])
+        arrayMenuOptions.append(["title":"尋找夥伴","icon":"FindFriendIcon"])
+        arrayMenuOptions.append(["title":"學生關懷","icon":"StudentIcon"])
+        arrayMenuOptions.append(["title":"即時畫面","icon":"StreamIcon"])
+        arrayMenuOptions.append(["title":"緊急通報","icon":"EmergencyIcon"])
+        arrayMenuOptions.append(["title":"我的寶貝","icon":"BabyIcon"])
         //arrayMenuOptions.append(["title":"系統設定","icon":"SettingIcon"])
+        
+        tblMenuOptions.reloadData()
+    }
+    func updateArrayMenuOptions(userName:String){
+        
+        arrayMenuOptions.append(["title":"首頁", "icon":"HomeIcon"])
+        arrayMenuOptions.append(["title":userName,"icon":"LoginIcon"])
+        arrayMenuOptions.append(["title":"校園地圖", "icon":"MapIcon"])
+        arrayMenuOptions.append(["title":"定位導引","icon":"NagivationIcon"])
+        arrayMenuOptions.append(["title":"尋找夥伴","icon":"FindFriendIcon"])
+        arrayMenuOptions.append(["title":"學生關懷","icon":"StudentIcon"])
+        arrayMenuOptions.append(["title":"即時畫面","icon":"StreamIcon"])
+        arrayMenuOptions.append(["title":"緊急通報","icon":"EmergencyIcon"])
+        arrayMenuOptions.append(["title":"我的寶貝","icon":"BabyIcon"])
         
         tblMenuOptions.reloadData()
     }

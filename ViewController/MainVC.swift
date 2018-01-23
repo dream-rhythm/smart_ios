@@ -7,12 +7,14 @@
 //
 
 import UIKit
+import Firebase
 
 class MainVC: BaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
         self.addSlideMenuButton()
+        //FirebaseApp.configure()
         // Do any additional setup after loading the view.
     }
 
