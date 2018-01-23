@@ -57,8 +57,10 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
     NSString *IPAddress;
     NSTimer *myTimer;
     int rssi;
-    int now;
+    int now,findBaby;
+    int scan_counter;
     int Place_research,Place_3Global,Place_Lab,place_HM;
+    int Times_research,Times_3Global,Times_Lab,Times_HM;
     enum UIActionSheetMode actionSheetMode;
 }
 
@@ -88,15 +90,20 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
     baby2 = [BabyBluetooth shareBabyBluetooth];
     //设置蓝牙委托
     [self babyDelegate];
-    baby2.scanForPeripherals().begin().stop(5);
+    baby2.scanForPeripherals().begin();
     rssi=-100;
     Place_3Global=-100;
     Place_Lab=-100;
     Place_research=-100;
     place_HM=-100;
+    Times_Lab=0;
+    Times_3Global=0;
+    Times_HM=0;
+    findBaby=0;
+    scan_counter=0;
     IPAddress=@"192.168.43.105";
     //设置委托后直接可以使用，无需等待CBCentralManagerStatePoweredOn状态
-    myTimer=[NSTimer scheduledTimerWithTimeInterval:3.0
+    myTimer=[NSTimer scheduledTimerWithTimeInterval:0.1
                                              target:self
                                            selector:@selector(doSomethingWhenTimeIsUp:)
                                            userInfo:nil
@@ -115,32 +122,26 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
     
     //设置扫描到设备的委托
     [baby2 setBlockOnDiscoverToPeripherals:^(CBCentralManager *central, CBPeripheral *peripheral, NSDictionary *advertisementData, NSNumber *RSSI) {
-        //if([RSSI intValue]>rssi){
         Name = peripheral.name;
         rssi = [RSSI intValue];
         if(rssi>0)rssi=-100;
-        //NSArray *a=[[NSArray alloc] init];
         if([Name isEqualToString:@"WoodBeacon3"]==true){
             //專題研究室
             Place_research=rssi;
-            //a =[sails getLocationRegionList:@"2"][76];
         }
         else if([Name isEqualToString:@"WoodBeacon2"]==true){
             //三國
             Place_3Global=rssi;
-            //a =[sails getLocationRegionList:@"2"][84];
         }
-        else if([Name isEqualToString:@"HMSoft"]==true){
+        else if([Name isEqualToString:@"HM-10"]==true){
             place_HM=rssi;
         }
         else{
             //無線網路研究室
             Place_Lab=rssi;
-            //a =[sails getLocationRegionList:@"2"][83];
         }
         
         printf("Yes");
-        //}
         printf("搜索到了设备:%s(Rssi=%s)\n",[peripheral.name UTF8String],[[RSSI stringValue] UTF8String]);
     }];
     
@@ -198,58 +199,80 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
 }
 - (IBAction)lockCenterButtonClicked:(UIButton *)sender
 {
-    [NSTimer scheduledTimerWithTimeInterval:2.0
+    [NSTimer scheduledTimerWithTimeInterval:1.0
                                      target:self
                                    selector:@selector(doSomethingWhenTimeIsUp:)
                                    userInfo:nil
                                     repeats:NO];
     
 }
-- (void) doSomethingWhenTimeIsUp:(NSTimer*)t {
-    NSArray *a=[[NSArray alloc] init];
-    if(Place_3Global==-100&&Place_Lab==-100&&Place_research==-100){
-        
-    }
-    else if(Place_research>=Place_Lab&&Place_research>=Place_3Global){
-        //專題研究室
-        a =[sails getLocationRegionList:@"2"][76];
-        if(now==76){}
-        else{
-            //[self setStartPlace:(LocationRegion*)a];
-            now=76;
-        }
-        
-    }
-    else if(Place_3Global>=Place_Lab&&Place_3Global>=Place_research){
-        //三國
-        a =[sails getLocationRegionList:@"2"][84];
-        if(now==84){}
-        else{
-            //[self setStartPlace:(LocationRegion*)a];
-            now=84;
-        }
-    }
-    else{
-        //無線網路研究室
-        a =[sails getLocationRegionList:@"2"][83];
-        if(now==83){}
-        else{
-            //[self setStartPlace:(LocationRegion*)a];
-            now=83;
-        }
-    }
-    printf("(%d,%d,%d)",Place_research,Place_3Global,Place_Lab);
-    [baby2 cancelScan];
-    [self->clientSocket writeData:[@"{\"status\":2}\r\n" dataUsingEncoding:NSUTF8StringEncoding] withTimeout:-1 tag:0];
-    Place_3Global=-100;
-    Place_Lab=-100;
-    Place_research=-100;
-    place_HM=-100;
-    myTimer=[NSTimer scheduledTimerWithTimeInterval:0.5
+- (void) rescan:(NSTimer*)t {
+    baby2.scanForPeripherals().begin();
+    myTimer=[NSTimer scheduledTimerWithTimeInterval:0.1
                                              target:self
-                                           selector:@selector(doSomethingWhenTimeIsUp2:)
+                                           selector:@selector(doSomethingWhenTimeIsUp:)
                                            userInfo:nil
                                             repeats:NO];
+}
+- (void) doSomethingWhenTimeIsUp:(NSTimer*)t {
+    NSArray *a=[[NSArray alloc] init];
+    [baby2 cancelScan];
+    if(scan_counter==0){
+        Place_3Global=-100;
+        Place_Lab=-100;
+        Place_research=-100;
+        place_HM=-100;
+        Times_3Global=0;
+        Times_Lab=0;
+        Times_research=0;
+    }
+    if(scan_counter!=20){
+        if(Place_3Global==-100&&Place_Lab==-100&&Place_research==-100);
+        else if(Place_3Global>=Place_Lab&&Place_3Global>=Place_research){
+            Times_3Global++;
+        }
+        else if(Place_Lab>=Place_research&&Place_Lab>=Place_3Global){
+            Times_Lab++;
+        }
+        else if(Place_research>=Place_3Global&&Place_research>=Place_Lab){
+            Times_research++;
+        }
+        printf("rssi(%d,%d,%d,%d)\n",Place_research,Place_3Global,Place_Lab,place_HM);
+        printf("times(%d,%d,%d)\n",Times_research,Times_3Global,Times_Lab);
+        scan_counter++;
+        myTimer=[NSTimer scheduledTimerWithTimeInterval:0.1
+                                                 target:self
+                                               selector:@selector(rescan:)
+                                               userInfo:nil
+                                                repeats:NO];
+    }
+    else{
+        if(Times_3Global==0&&Times_Lab==0&&Times_research==0){
+            
+        }
+        else if(Times_research>=Times_Lab&&Times_research>=Times_3Global){
+            //專題研究室
+            a =[sails getLocationRegionList:@"2"][76];
+            now=76;
+        }
+        else if(Times_3Global>=Times_Lab&&Times_3Global>=Times_research){
+            //三國
+            a =[sails getLocationRegionList:@"2"][84];
+            now=84;
+        }
+        else{
+            //無線網路研究室
+            a =[sails getLocationRegionList:@"2"][83];
+            now=83;
+        }
+        //[self->clientSocket writeData:[@"{\"status\":2}\r\n" dataUsingEncoding:NSUTF8StringEncoding] withTimeout:-1 tag:0];
+        scan_counter=0;
+        myTimer=[NSTimer scheduledTimerWithTimeInterval:0.1
+                                                 target:self
+                                               selector:@selector(doSomethingWhenTimeIsUp2:)
+                                               userInfo:nil
+                                                repeats:NO];
+    }
     
 }
 - (void) doSomethingWhenTimeIsUp2:(NSTimer*)t {
@@ -260,6 +283,7 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
                                            selector:@selector(doSomethingWhenTimeIsUp:)
                                            userInfo:nil
                                             repeats:NO];
+    [self setStartPlace:[sails getLocationRegionList:@"2"][now]];
     //printf("place=%s %d %d %d",[[str componentsSeparatedByString:@"location\":\""] objectAtIndex:1],Place_3Global,Place_Lab,Place_research);
     /*if(str.length>30&&Place_3Global!=-100||Place_Lab!=-100||Place_research!=-100){
         NSString * tmp = [[str componentsSeparatedByString:@"location\":\""] objectAtIndex:1];

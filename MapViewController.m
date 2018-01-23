@@ -57,8 +57,10 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
     NSString *IPAddress;
     NSTimer *myTimer;
     int rssi;
-    int now;
-    int Place_research,Place_3Global,Place_Lab;
+    int now,findBaby;
+    int scan_counter;
+    int Place_research,Place_3Global,Place_Lab,place_HM;
+    int Times_research,Times_3Global,Times_Lab,Times_HM;
     enum UIActionSheetMode actionSheetMode;
 }
 
@@ -85,18 +87,23 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
     //设置蓝牙委托
     [self babyDelegate];
     //设置委托后直接可以使用，无需等待CBCentralManagerStatePoweredOn状态
-    baby.scanForPeripherals().begin().stop(5);
+    baby.scanForPeripherals().begin();
     rssi=-100;
     Place_3Global=-100;
     Place_Lab=-100;
     Place_research=-100;
-    IPAddress=@"172.20.10.11";
+    Times_research=0;
+    Times_Lab=0;
+    Times_3Global=0;
+    Times_HM=0;
+    scan_counter=0;
+    IPAddress=@"192.168.43.105";
     // Do any additional setup after loading the view.
     self.title = @"定位導引";
     //self.transitioningDelegate=self;
     [self initSails];
     [self initUI];
-    myTimer=[NSTimer scheduledTimerWithTimeInterval:3.0
+    myTimer=[NSTimer scheduledTimerWithTimeInterval:0.1
                                      target:self
                                    selector:@selector(doSomethingWhenTimeIsUp:)
                                    userInfo:nil
@@ -113,28 +120,24 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
     
     //设置扫描到设备的委托
     [baby setBlockOnDiscoverToPeripherals:^(CBCentralManager *central, CBPeripheral *peripheral, NSDictionary *advertisementData, NSNumber *RSSI) {
-        //if([RSSI intValue]>rssi){
-            Name = peripheral.name;
-            rssi = [RSSI intValue];
+        Name = peripheral.name;
+        rssi = [RSSI intValue];
         if(rssi>0)rssi=-100;
-            //NSArray *a=[[NSArray alloc] init];
-            if([Name isEqualToString:@"WoodBeacon3"]==true){
-                //專題研究室
-                Place_research=rssi;
-                //a =[sails getLocationRegionList:@"2"][76];
-            }
-            else if([Name isEqualToString:@"WoodBeacon2"]==true){
-                //三國
-                Place_3Global=rssi;
-                //a =[sails getLocationRegionList:@"2"][84];
-            }
-            else{
-                //無線網路研究室
-                Place_Lab=rssi;
-                //a =[sails getLocationRegionList:@"2"][83];
-            }
-            
-            printf("Yes");
+        if([Name isEqualToString:@"WoodBeacon3"]==true){
+            //專題研究室
+            Place_research=rssi;
+        }
+        else if([Name isEqualToString:@"WoodBeacon2"]==true){
+            //三國
+            Place_3Global=rssi;
+        }
+        else if([Name isEqualToString:@"HM-10"]==true){
+            place_HM=rssi;
+        }
+        else if([Name isEqualToString:@"corner05"]==true){
+            //無線網路研究室
+            Place_Lab=rssi;
+        }
         //}
         printf("搜索到了设备:%s(Rssi=%s)\n",[peripheral.name UTF8String],[[RSSI stringValue] UTF8String]);
     }];
@@ -243,6 +246,10 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
     if ([string containsString:@"登入成功"]) {
         printf("登入成功");
     }
+    else{
+        
+    }
+    [self->clientSocket readDataWithTimeout:-1 tag:0];
 }
 
 
@@ -712,58 +719,85 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
                                     repeats:NO];
     
 }
+- (void) rescan:(NSTimer*)t {
+    baby.scanForPeripherals().begin();
+    myTimer=[NSTimer scheduledTimerWithTimeInterval:0.1
+                                             target:self
+                                           selector:@selector(doSomethingWhenTimeIsUp:)
+                                           userInfo:nil
+                                            repeats:NO];
+}
 - (void) doSomethingWhenTimeIsUp:(NSTimer*)t {
     NSArray *a=[[NSArray alloc] init];
-    if(Place_3Global==-100&&Place_Lab==-100&&Place_research==-100){
-        
+    [baby cancelScan];
+    if(scan_counter==0){
+        Place_3Global=-100;
+        Place_Lab=-100;
+        Place_research=-100;
+        place_HM=-100;
+        Times_3Global=0;
+        Times_Lab=0;
+        Times_research=0;
     }
-    else if(Place_research>=Place_Lab&&Place_research>=Place_3Global){
-        //專題研究室
-        a =[sails getLocationRegionList:@"2"][76];
-        if(now==76){}
-        else{
-            [self setStartPlace:(LocationRegion*)a];
-            now=76;
+    if(scan_counter!=11){
+        if(Place_3Global==-100&&Place_Lab==-100&&Place_research==-100);
+        else if(Place_3Global>=Place_Lab&&Place_3Global>=Place_research){
+            Times_3Global++;
         }
-        
-    }
-    else if(Place_3Global>=Place_Lab&&Place_3Global>=Place_research){
-        //三國
-        a =[sails getLocationRegionList:@"2"][84];
-        if(now==84){}
-        else{
-            [self setStartPlace:(LocationRegion*)a];
-            now=84;
+        else if(Place_Lab>=Place_research&&Place_Lab>=Place_3Global){
+            Times_Lab++;
         }
+        else if(Place_research>=Place_3Global&&Place_research>=Place_Lab){
+            Times_research++;
+        }
+        printf("rssi(%d,%d,%d,%d)\n",Place_research,Place_3Global,Place_Lab,place_HM);
+        printf("times(%d,%d,%d)\n",Times_research,Times_3Global,Times_Lab);
+        scan_counter++;
+        myTimer=[NSTimer scheduledTimerWithTimeInterval:0.1
+                                                 target:self
+                                               selector:@selector(rescan:)
+                                               userInfo:nil
+                                                repeats:NO];
     }
     else{
-        //無線網路研究室
-        a =[sails getLocationRegionList:@"2"][83];
-        if(now==83){}
+        if(Times_3Global==0&&Times_Lab==0&&Times_research==0){
+            
+        }
+        else if(Times_research>=Times_Lab&&Times_research>=Times_3Global){
+            //專題研究室
+            a =[sails getLocationRegionList:@"2"][76];
+            now=76;
+        }
+        else if(Times_3Global>=Times_Lab&&Times_3Global>=Times_research){
+            //三國
+            a =[sails getLocationRegionList:@"2"][84];
+            now=84;
+        }
         else{
-            [self setStartPlace:(LocationRegion*)a];
+            //無線網路研究室
+            a =[sails getLocationRegionList:@"2"][83];
             now=83;
         }
+        [baby cancelScan];
+        scan_counter=0;
+        myTimer=[NSTimer scheduledTimerWithTimeInterval:0.1
+                                                 target:self
+                                               selector:@selector(doSomethingWhenTimeIsUp2:)
+                                               userInfo:nil
+                                                repeats:NO];
     }
-    printf("(%d,%d,%d)",Place_research,Place_3Global,Place_Lab);
-    [baby cancelScan];
-    Place_3Global=-100;
-    Place_Lab=-100;
-    Place_research=-100;
-    myTimer=[NSTimer scheduledTimerWithTimeInterval:0.5
-                                     target:self
-                                   selector:@selector(doSomethingWhenTimeIsUp2:)
-                                   userInfo:nil
-                                    repeats:NO];
     
 }
 - (void) doSomethingWhenTimeIsUp2:(NSTimer*)t {
     baby.scanForPeripherals().begin();
-    myTimer=[NSTimer scheduledTimerWithTimeInterval:3.0
-                                     target:self
-                                   selector:@selector(doSomethingWhenTimeIsUp:)
-                                   userInfo:nil
-                                    repeats:NO];
+    LocationRegion *a=[[NSArray alloc] init];
+    myTimer=[NSTimer scheduledTimerWithTimeInterval:0.1
+                                             target:self
+                                           selector:@selector(doSomethingWhenTimeIsUp:)
+                                           userInfo:nil
+                                            repeats:NO];
+    a=[sails getLocationRegionList:@"2"][now];
+    [self setStartPlace: a];
 }
 
 - (IBAction)stopRoutingButtonClicked:(UIButton *)sender

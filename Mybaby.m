@@ -131,7 +131,6 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
         Name = peripheral.name;
         rssi = [RSSI intValue];
         if(rssi>0)rssi=-100;
-        //if(scan_counter==0)scan_counter=1;
         if([Name isEqualToString:@"WoodBeacon3"]==true){
             //專題研究室
             Place_research=rssi;
@@ -147,7 +146,7 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
                 Distance.text = [NSString stringWithFormat:formatString,[self calcDistByRSSI:place_HM]];
             }
         }
-        else{
+        else if([Name isEqualToString:@"corner05"]==true){
             //無線網路研究室
             Place_Lab=rssi;
         }
@@ -235,7 +234,7 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
         Times_Lab=0;
         Times_research=0;
     }
-    if(scan_counter!=20){
+    if(scan_counter!=15){
         if(Place_3Global==-100&&Place_Lab==-100&&Place_research==-100);
         else if(Place_3Global>=Place_Lab&&Place_3Global>=Place_research){
             Times_3Global++;
