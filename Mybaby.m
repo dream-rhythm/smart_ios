@@ -17,6 +17,7 @@
 #import "CoreBluetooth/CoreBluetooth.h"
 #import "CoreLocation/CoreLocation.h"
 #import "BabyBluetooth/BabyBluetooth.h"
+#import <AudioToolbox/AudioToolbox.h>
 //#import "include/AudioToolbox.h"
 BabyBluetooth *baby3;
 typedef NS_ENUM(NSInteger, UIActionSheetMode) {
@@ -60,7 +61,7 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
     NSString *Name;
     NSString *IPAddress;
     NSTimer *myTimer;
-    int rssi;
+    int rssi,alert_status;
     int now,findBaby;
     int scan_counter;
     int Place_research,Place_3Global,Place_Lab,place_HM;
@@ -106,6 +107,7 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
     Times_HM=0;
     findBaby=0;
     scan_counter=0;
+    alert_status=0;
     IPAddress=@"192.168.43.105";
     //设置委托后直接可以使用，无需等待CBCentralManagerStatePoweredOn状态
     myTimer=[NSTimer scheduledTimerWithTimeInterval:0.1
@@ -146,6 +148,17 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
                 Distance.text = [NSString stringWithFormat:formatString,[self calcDistByRSSI:place_HM]];
             }
         }
+        else if([Name isEqualToString:@"HM-11"]==true){
+            place_HM=rssi;
+            NSString *formatString = NSLocalizedString(@"%.2fm", @"Format string for rssi distance.");
+            if([self calcDistByRSSI:place_HM]<50){
+                Distance.text = [NSString stringWithFormat:formatString,[self calcDistByRSSI:place_HM]];
+            }
+            
+            [self alert_baby];
+            
+            
+        }
         else if([Name isEqualToString:@"corner05"]==true){
             //無線網路研究室
             Place_Lab=rssi;
@@ -168,6 +181,42 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
         return NO;
     }];
 }
+-(void)alert_baby{
+    if(alert_status==0){
+        alert_status++;
+        NSString *str = @"您的小孩被抱起了！！！";
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"警報"
+                                                        message:str
+                                                       delegate:self
+                                              cancelButtonTitle:@"確定"
+                                              otherButtonTitles:nil];
+        
+        // 設定樣式
+        //[alert setAlertViewStyle:UIAlertViewStylePlainTextInput];
+        [alert show];
+        [self sound];
+        alert_status++;
+    }
+    else if(alert_status!=10){
+        alert_status++;
+    }
+    else{
+        alert_status=0;
+    }
+}
+-(void)sound{
+    SystemSoundID soundID;
+    //NSBundle来返回音频文件路径
+    NSString *soundFile = [[NSBundle mainBundle] pathForResource:@"dive2" ofType:@"wav"];
+    //建立SystemSoundID对象，但是这里要传地址(加&符号)。 第一个参数需要一个CFURLRef类型的url参数，要新建一个NSString来做桥接转换(bridge)，而这个NSString的值，就是上面的音频文件路径
+    AudioServicesCreateSystemSoundID((__bridge CFURLRef)[NSURL fileURLWithPath:soundFile], &soundID);
+    //播放提示音 带震动
+    AudioServicesPlayAlertSound(soundID);
+    //播放系统声音
+    //    AudioServicesPlaySystemSound(soundID);
+}
+
 - (IBAction)onIPsettingClick:(id)sender
 {
     NSString *str = @"請輸入伺服器IP";
