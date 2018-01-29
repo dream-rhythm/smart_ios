@@ -63,9 +63,10 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
     NSTimer *myTimer;
     int rssi,alert_status;
     int now,findBaby;
-    int scan_counter;
-    int Place_research,Place_3Global,Place_Lab,place_HM;
+    int scan_counter,HM_counter;
+    int Place_research,Place_3Global,Place_Lab;
     int Times_research,Times_3Global,Times_Lab,Times_HM;
+    float place_HM;
     enum UIActionSheetMode actionSheetMode;
 }
 
@@ -105,6 +106,7 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
     Times_Lab=0;
     Times_3Global=0;
     Times_HM=0;
+    HM_counter=0;
     findBaby=0;
     scan_counter=0;
     alert_status=0;
@@ -142,14 +144,13 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
             Place_3Global=rssi;
         }
         else if([Name isEqualToString:@"HM-10"]==true){
-            place_HM=rssi;
-            NSString *formatString = NSLocalizedString(@"%.2fm", @"Format string for rssi distance.");
-            if([self calcDistByRSSI:place_HM]<50){
-                Distance.text = [NSString stringWithFormat:formatString,[self calcDistByRSSI:place_HM]];
-            }
+            place_HM+=[self calcDistByRSSI:place_HM];
+            HM_counter++;
+            
         }
         else if([Name isEqualToString:@"HM-11"]==true){
-            place_HM=rssi;
+            place_HM+=[self calcDistByRSSI:place_HM];
+            HM_counter++;
             NSString *formatString = NSLocalizedString(@"%.2fm", @"Format string for rssi distance.");
             if([self calcDistByRSSI:place_HM]<50){
                 Distance.text = [NSString stringWithFormat:formatString,[self calcDistByRSSI:place_HM]];
@@ -180,6 +181,30 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
         }
         return NO;
     }];
+}
+-(void)alert_baby2{
+    if(alert_status==0){
+        alert_status++;
+        NSString *str = @"您的小孩遠離您了！！！";
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"警報"
+                                                        message:str
+                                                       delegate:self
+                                              cancelButtonTitle:@"確定"
+                                              otherButtonTitles:nil];
+        
+        // 設定樣式
+        //[alert setAlertViewStyle:UIAlertViewStylePlainTextInput];
+        [alert show];
+        [self sound];
+        alert_status++;
+    }
+    else if(alert_status!=10){
+        alert_status++;
+    }
+    else{
+        alert_status=0;
+    }
 }
 -(void)alert_baby{
     if(alert_status==0){
@@ -283,7 +308,7 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
         Times_Lab=0;
         Times_research=0;
     }
-    if(scan_counter!=15){
+    if(scan_counter!=10){
         if(Place_3Global==-100&&Place_Lab==-100&&Place_research==-100);
         else if(Place_3Global>=Place_Lab&&Place_3Global>=Place_research){
             Times_3Global++;
@@ -355,13 +380,22 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
         [self setStartPlace: a];
         Place.text=[NSString stringWithFormat:@"%@",[a label]];
         findBaby=0;
+        
+        NSString *formatString = NSLocalizedString(@"%.2fm", @"Format string for rssi distance.");
+        if(place_HM/HM_counter<50){
+            Distance.text = [NSString stringWithFormat:formatString,place_HM/HM_counter];
+        }
         //Distance.text = place_HM;
     }
     else{
         Distance.text=@"超出範圍";
         findBaby=1;
         [self->clientSocket writeData:[@"{\"status\":2}\r\n" dataUsingEncoding:NSUTF8StringEncoding] withTimeout:-1 tag:0];
+        [self alert_baby2];
     }
+    HM_counter=0;
+    place_HM=0;
+
     /*
     if(str.length>30&&Place_3Global==-100&&Place_Lab==-100&&Place_research==-100&&place_HM==-100
        ){
