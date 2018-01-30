@@ -135,14 +135,17 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
     [baby3 setBlockOnDiscoverToPeripherals:^(CBCentralManager *central, CBPeripheral *peripheral, NSDictionary *advertisementData, NSNumber *RSSI) {
         Name = peripheral.name;
         rssi = [RSSI intValue];
-        if(rssi>0)rssi=-100;
+        if(rssi<0){
         if([Name isEqualToString:@"WoodBeacon3"]==true){
             //專題研究室
+    
             Place_research+=rssi;
+            Times_research++;
         }
         else if([Name isEqualToString:@"WoodBeacon2"]==true){
             //三國
             Place_3Global+=rssi;
+            Times_3Global++;
         }
         else if([Name isEqualToString:@"HM-10"]==true){
             place_HM+=[self calcDistByRSSI:place_HM];
@@ -150,22 +153,22 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
             
         }
         else if([Name isEqualToString:@"HM-11"]==true){
-            place_HM+=[self calcDistByRSSI:place_HM];
+            place_HM=-100;
             HM_counter++;
-            NSString *formatString = NSLocalizedString(@"%.2fm", @"Format string for rssi distance.");
-            if([self calcDistByRSSI:place_HM]<50){
-                Distance.text = [NSString stringWithFormat:formatString,[self calcDistByRSSI:place_HM]];
-            }
             
-            [self alert_baby];
+            
+            [self alert_baby2];
             
             
         }
         else if([Name isEqualToString:@"corner05"]==true){
             //無線網路研究室
             Place_Lab+=rssi;
+            Times_Lab++;
+        }
         }
         printf("搜索到了设备:%s(Rssi=%s)\n",[peripheral.name UTF8String],[[RSSI stringValue] UTF8String]);
+        
     }];
     
     //过滤器
@@ -312,15 +315,16 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
     NSArray *a=[[NSArray alloc] init];
     [baby3 cancelScan];
     if(scan_counter==0){
-        Place_3Global=-100;
-        Place_Lab=-100;
-        Place_research=-100;
+        Place_3Global=0;
+        Place_Lab=0;
+        Place_research=0;
         place_HM=-100;
-        Times_3Global=0;
-        Times_Lab=0;
-        Times_research=0;
+        Times_3Global=1;
+        Times_Lab=1;
+        Times_research=1;
     }
     if(scan_counter!=10){
+        /*
         if(Place_3Global==-100&&Place_Lab==-100&&Place_research==-100);
         else if(Place_3Global>=Place_Lab&&Place_3Global>=Place_research){
             Times_3Global++;
@@ -330,17 +334,19 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
         }
         else if(Place_research>=Place_3Global&&Place_research>=Place_Lab){
             Times_research++;
-        }
-        printf("rssi(%d,%d,%d,%d)\n",Place_research,Place_3Global,Place_Lab,place_HM);
-        printf("times(%d,%d,%d)\n",Times_research,Times_3Global,Times_Lab);
+        }*/
+        //printf("rssi(%d,%d,%d,%d)\n",Place_research,Place_3Global,Place_Lab,place_HM);
+        //printf("times(%d,%d,%d)\n",Times_research,Times_3Global,Times_Lab);
         scan_counter++;
         myTimer=[NSTimer scheduledTimerWithTimeInterval:0.1
                                                  target:self
                                                selector:@selector(rescan:)
                                                userInfo:nil
                                                 repeats:NO];
+        printf("rssi(%f,%f,%f,%f)\n",(float)Place_research/Times_research,(float)Place_3Global/Times_3Global,(float)Place_Lab/Times_Lab,place_HM);
     }
     else{
+        /*
         if(Times_3Global==0&&Times_Lab==0&&Times_research==0){
             
         }
@@ -358,6 +364,32 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
             //無線網路研究室
             a =[sails getLocationRegionList:@"2"][83];
             now=83;
+        }*/
+        if(Times_3Global!=1){
+            Times_3Global-=1;
+        }
+        else Place_3Global=-100;
+        if(Times_Lab!=1)Times_Lab-=1;
+        else Place_Lab=-100;
+        if(Times_research!=1)Times_research-=1;
+        else Place_research=-100;
+        if(Place_3Global==0&&Place_Lab==0&&Place_research==0){
+            
+        }
+        else if((float)Place_research/Times_research>=(float)Place_Lab/Times_Lab&&(float)Place_research/Times_research>=(float)Place_3Global/Times_3Global){
+            //專題研究室
+            a =[sails getLocationRegionList:@"2"][76];
+            now=76;
+        }
+        else if((float)Place_3Global/Times_3Global>=(float)Place_Lab/Times_Lab&&(float)Place_3Global/Times_3Global>=(float)Place_research/Times_research){
+            //三國
+            a =[sails getLocationRegionList:@"2"][84];
+            now=84;
+        }
+        else{
+            //無線網路研究室
+            a =[sails getLocationRegionList:@"2"][83];
+            now=83;
         }
         [baby3 cancelScan];
         //[self->clientSocket writeData:[@"{\"status\":2}\r\n" dataUsingEncoding:NSUTF8StringEncoding] withTimeout:-1 tag:0];
@@ -367,6 +399,7 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
                                                selector:@selector(doSomethingWhenTimeIsUp2:)
                                                userInfo:nil
                                                 repeats:NO];
+        
     }
 }
 - (float)calcDistByRSSI:(int)rssi2
