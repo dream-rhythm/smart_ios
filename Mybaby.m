@@ -60,13 +60,14 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
     NSString *str;
     NSString *Name;
     NSString *IPAddress;
-    NSTimer *myTimer;
+    NSTimer *myTimer,*myTimer2;
     int rssi,alert_status;
     int now,findBaby;
     int scan_counter,HM_counter;
     int Place_research,Place_3Global,Place_Lab;
     int Times_research,Times_3Global,Times_Lab,Times_HM;
     float place_HM;
+    int baby_alert_range;
     enum UIActionSheetMode actionSheetMode;
 }
 
@@ -137,11 +138,11 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
         if(rssi>0)rssi=-100;
         if([Name isEqualToString:@"WoodBeacon3"]==true){
             //專題研究室
-            Place_research=rssi;
+            Place_research+=rssi;
         }
         else if([Name isEqualToString:@"WoodBeacon2"]==true){
             //三國
-            Place_3Global=rssi;
+            Place_3Global+=rssi;
         }
         else if([Name isEqualToString:@"HM-10"]==true){
             place_HM+=[self calcDistByRSSI:place_HM];
@@ -162,7 +163,7 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
         }
         else if([Name isEqualToString:@"corner05"]==true){
             //無線網路研究室
-            Place_Lab=rssi;
+            Place_Lab+=rssi;
         }
         printf("搜索到了设备:%s(Rssi=%s)\n",[peripheral.name UTF8String],[[RSSI stringValue] UTF8String]);
     }];
@@ -183,8 +184,9 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
     }];
 }
 -(void)alert_baby2{
-    if(alert_status==0){
+    if(baby_alert_range==0){
         alert_status++;
+        baby_alert_range=2;
         NSString *str = @"您的小孩遠離您了！！！";
         
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"警報"
@@ -197,18 +199,13 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
         //[alert setAlertViewStyle:UIAlertViewStylePlainTextInput];
         [alert show];
         [self sound];
-        alert_status++;
     }
-    else if(alert_status!=10){
-        alert_status++;
-    }
-    else{
-        alert_status=0;
-    }
+    
 }
 -(void)alert_baby{
-    if(alert_status==0){
+    if(baby_alert_range==0){
         alert_status++;
+        baby_alert_range=1;
         NSString *str = @"您的小孩被抱起了！！！";
         
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"警報"
@@ -219,21 +216,28 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
         
         // 設定樣式
         //[alert setAlertViewStyle:UIAlertViewStylePlainTextInput];
+    
         [alert show];
         [self sound];
-        alert_status++;
     }
-    else if(alert_status!=10){
-        alert_status++;
-    }
-    else{
-        alert_status=0;
-    }
+
 }
 -(void)sound{
+    
+    myTimer2=[NSTimer scheduledTimerWithTimeInterval:2.0
+                                              target:self
+                                            selector:@selector(TimsUpSound:)
+                                            userInfo:nil
+                                             repeats:NO];
     SystemSoundID soundID;
+    NSString *soundFile;
     //NSBundle来返回音频文件路径
-    NSString *soundFile = [[NSBundle mainBundle] pathForResource:@"dive2" ofType:@"wav"];
+    if(baby_alert_range==1){
+        soundFile = [[NSBundle mainBundle] pathForResource:@"dive" ofType:@"wav"];
+    }
+    else{
+        soundFile = [[NSBundle mainBundle] pathForResource:@"bb" ofType:@"wav"];
+    }
     //建立SystemSoundID对象，但是这里要传地址(加&符号)。 第一个参数需要一个CFURLRef类型的url参数，要新建一个NSString来做桥接转换(bridge)，而这个NSString的值，就是上面的音频文件路径
     AudioServicesCreateSystemSoundID((__bridge CFURLRef)[NSURL fileURLWithPath:soundFile], &soundID);
     //播放提示音 带震动
@@ -241,7 +245,11 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
     //播放系统声音
     //    AudioServicesPlaySystemSound(soundID);
 }
-
+- (void) TimsUpSound:(NSTimer*)t {
+    if(baby_alert_range!=0){
+        [self sound];
+    }
+}
 - (IBAction)onIPsettingClick:(id)sender
 {
     NSString *str = @"請輸入伺服器IP";
@@ -267,6 +275,10 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
     switch (buttonIndex) {
         case 0:
             printf("取消..");
+            if(baby_alert_range!=0){
+                alert_status=0;
+                baby_alert_range=0;
+            }
             break;
         case 1:
             // Xcode5.0 之後的做法，在此進行讀取
