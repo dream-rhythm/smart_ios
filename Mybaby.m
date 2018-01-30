@@ -150,14 +150,14 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
         else if([Name isEqualToString:@"HM-10"]==true){
             place_HM+=[self calcDistByRSSI:place_HM];
             HM_counter++;
-            
+            if(baby_alert_range==3)baby_alert_range=0;
         }
         else if([Name isEqualToString:@"HM-11"]==true){
-            place_HM=-100;
+            place_HM+=[self calcDistByRSSI:place_HM];
             HM_counter++;
+            if(baby_alert_range==3)baby_alert_range=0;
             
-            
-            [self alert_baby2];
+            [self alert_baby];
             
             
         }
@@ -188,7 +188,7 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
 }
 -(void)alert_baby2{
     if(baby_alert_range==0){
-        alert_status++;
+        //alert_status++;
         baby_alert_range=2;
         NSString *str = @"您的小孩遠離您了！！！";
         
@@ -207,7 +207,7 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
 }
 -(void)alert_baby{
     if(baby_alert_range==0){
-        alert_status++;
+        //alert_status++;
         baby_alert_range=1;
         NSString *str = @"您的小孩被抱起了！！！";
         
@@ -237,16 +237,16 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
     //NSBundle来返回音频文件路径
     if(baby_alert_range==1){
         soundFile = [[NSBundle mainBundle] pathForResource:@"dive" ofType:@"wav"];
+        AudioServicesCreateSystemSoundID((__bridge CFURLRef)[NSURL fileURLWithPath:soundFile], &soundID);
+        //播放提示音 带震动
+        AudioServicesPlayAlertSound(soundID);
     }
-    else{
+    else if(baby_alert_range==2){
         soundFile = [[NSBundle mainBundle] pathForResource:@"bb" ofType:@"wav"];
+        AudioServicesCreateSystemSoundID((__bridge CFURLRef)[NSURL fileURLWithPath:soundFile], &soundID);
+        //播放提示音 带震动
+        AudioServicesPlayAlertSound(soundID);
     }
-    //建立SystemSoundID对象，但是这里要传地址(加&符号)。 第一个参数需要一个CFURLRef类型的url参数，要新建一个NSString来做桥接转换(bridge)，而这个NSString的值，就是上面的音频文件路径
-    AudioServicesCreateSystemSoundID((__bridge CFURLRef)[NSURL fileURLWithPath:soundFile], &soundID);
-    //播放提示音 带震动
-    AudioServicesPlayAlertSound(soundID);
-    //播放系统声音
-    //    AudioServicesPlaySystemSound(soundID);
 }
 - (void) TimsUpSound:(NSTimer*)t {
     if(baby_alert_range!=0){
@@ -278,9 +278,11 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
     switch (buttonIndex) {
         case 0:
             printf("取消..");
-            if(baby_alert_range!=0){
-                alert_status=0;
+            if(baby_alert_range==1){
                 baby_alert_range=0;
+            }
+            else if(baby_alert_range==2){
+                baby_alert_range=3;
             }
             break;
         case 1:
