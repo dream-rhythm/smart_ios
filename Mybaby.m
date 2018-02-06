@@ -437,6 +437,8 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
     else{
         Distance.text=@"超出範圍";
         findBaby=1;
+        a=[sails getLocationRegionList:@"2"][now];
+        [self setStartPlace2: a];
         [self->clientSocket writeData:[@"{\"status\":2}\r\n" dataUsingEncoding:NSUTF8StringEncoding] withTimeout:-1 tag:0];
         [self alert_baby2];
     }
@@ -475,10 +477,13 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
 }
 -(void)setStartPlace:(LocationRegion*)location
 {
-    [self->clientSocket writeData:[@"{\"status\":2}\r\n" dataUsingEncoding:NSUTF8StringEncoding] withTimeout:-1 tag:0];
+    //[self->clientSocket writeData:[@"{\"status\":2}\r\n" dataUsingEncoding:NSUTF8StringEncoding] withTimeout:-1 tag:0];
     [sailsMarkerManager clearMarkers];
+    [sailsPathRoutingManager disableRouting];
+    [sailsPathRoutingManager enableRouting];
     [sailsPathRoutingManager setStartRegion:location];
     [sailsMarkerManager setLocationRegionMarker:location andImage:[UIImage imageNamed:@"BabyIcon"] andMarkerFrame:48 andIsBoundCenter:true];
+    //[sailsPathRoutingManager disableRouting];
     //[self->clientSocket writeData:[[NSString stringWithFormat:@"{\"status\":1,\"location\":\"%@\"}\r\n",[location  label]] dataUsingEncoding:NSUTF8StringEncoding] withTimeout:-1 tag:0];
     //[sailsPathRoutingManager enableRouting];
     /*if (([sails isLocationEngineStarted] && [sailsPathRoutingManager getStartRegion] == nil) || (![sails isLocationEngineStarted] && [sailsPathRoutingManager getStartRegion] != nil)) {
@@ -487,13 +492,117 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
      //sailsPinMarkerManager.hidden = true;
      }*/
     /*
+     if ([sails isLocationEngineStarted]) {
+     printf("Error");
+     //set routing start point to current user location
+     [sailsPathRoutingManager setStartRegion:nil];
+     
+     //set routing end point marker icon image
+     [sailsPathRoutingManager setTargetMakerImage:[UIImage imageNamed:@"destination"]];
+     
+     //set routing end point marker icon frame
+     [sailsPathRoutingManager setTargetMakerFrame:48];
+     
+     //set routing path's color
+     Paint *routingPathPaint = [sailsPathRoutingManager getPathPaint];
+     routingPathPaint.strokeColor = [UIColor colorWithRed:53.0/255.0 green:179.0/255.0 blue:229.0/255.0 alpha:255.0/255.0];
+     
+     stopRoutingButton.hidden = false;
+     
+     [self animateNaviViewLarge:true];
+     
+     }else {
+     printf("Error2");
+     //set routing end point marker icon image
+     //[sailsPathRoutingManager setTargetMakerImage:[UIImage imageNamed:@"map_destination"]];
+     
+     //set routing end point marker icon frame
+     //[sailsPathRoutingManager setTargetMakerFrame:48];
+     
+     //set routing path's color
+     //Paint *routingPathPaint = [sailsPathRoutingManager getPathPaint];
+     //routingPathPaint.strokeColor = [UIColor colorWithRed:133.0/255.0 green:176.0/255.0 blue:56.0/255.0 alpha:255.0/255.0];
+     
+     //if ([sailsPathRoutingManager getStartRegion] != nil) {
+     //    stopRoutingButton.hidden = false;
+     //}
+     }
+     */
+}
+-(void)setStartPlace2:(LocationRegion*)location
+{
+    [self->clientSocket writeData:[@"{\"status\":2}\r\n" dataUsingEncoding:NSUTF8StringEncoding] withTimeout:-1 tag:0];
+    //[sailsMarkerManager clearMarkers];
+    [sailsPathRoutingManager setStartRegion:location];
+    [sailsMarkerManager setLocationRegionMarker:location andImage:[UIImage imageNamed:@"start_point"] andMarkerFrame:48 andIsBoundCenter:true];
+    //[self->clientSocket writeData:[[NSString stringWithFormat:@"{\"status\":1,\"location\":\"%@\"}\r\n",[location  label]] dataUsingEncoding:NSUTF8StringEncoding] withTimeout:-1 tag:0];
+    [sailsPathRoutingManager enableRouting];
+    if (([sails isLocationEngineStarted] && [sailsPathRoutingManager getStartRegion] == nil) || (![sails isLocationEngineStarted] && [sailsPathRoutingManager getStartRegion] != nil)) {
+     [sailsPathRoutingManager enableRouting];
+     //[self animateFunctionViewHorizontal:NaviView Hidden:false];
+     //sailsPinMarkerManager.hidden = true;
+     }
+    
+     if ([sails isLocationEngineStarted]) {
+     printf("Error");
+     //set routing start point to current user location
+     [sailsPathRoutingManager setStartRegion:nil];
+     
+     //set routing end point marker icon image
+     [sailsPathRoutingManager setTargetMakerImage:[UIImage imageNamed:@"BabyIcon"]];
+     
+     //set routing end point marker icon frame
+     [sailsPathRoutingManager setTargetMakerFrame:48];
+     
+     //set routing path's color
+     Paint *routingPathPaint = [sailsPathRoutingManager getPathPaint];
+     routingPathPaint.strokeColor = [UIColor colorWithRed:53.0/255.0 green:179.0/255.0 blue:229.0/255.0 alpha:255.0/255.0];
+     
+     stopRoutingButton.hidden = false;
+     
+     [self animateNaviViewLarge:true];
+     
+     }else {
+     printf("Error4");
+     //set routing end point marker icon image
+     [sailsPathRoutingManager setTargetMakerImage:[UIImage imageNamed:@"BabyIcon"]];
+     
+     //set routing end point marker icon frame
+     [sailsPathRoutingManager setTargetMakerFrame:48];
+     
+     //set routing path's color
+     Paint *routingPathPaint = [sailsPathRoutingManager getPathPaint];
+     routingPathPaint.strokeColor = [UIColor colorWithRed:133.0/255.0 green:176.0/255.0 blue:56.0/255.0 alpha:255.0/255.0];
+     
+     if ([sailsPathRoutingManager getStartRegion] != nil) {
+         stopRoutingButton.hidden = false;
+     }
+     }
+    
+}
+-(void)setEndPlace:(LocationRegion*)location
+{
+    [self->clientSocket writeData:[@"{\"status\":2}\r\n" dataUsingEncoding:NSUTF8StringEncoding] withTimeout:-1 tag:0];
+    //[sailsMarkerManager clearMarkers];
+    [sailsPathRoutingManager setStartRegion:[sails getLocationRegionList:@"2"][now]];
+    [sailsMarkerManager setLocationRegionMarker:[sails getLocationRegionList:@"2"][now] andImage:[UIImage imageNamed:@"start_point"] andMarkerFrame:48 andIsBoundCenter:true];
+    //[self->clientSocket writeData:[[NSString stringWithFormat:@"{\"status\":1,\"location\":\"%@\"}\r\n",[location  label]] dataUsingEncoding:NSUTF8StringEncoding] withTimeout:-1 tag:0];
+    [sailsPathRoutingManager enableRouting];
+    if (([sails isLocationEngineStarted] && [sailsPathRoutingManager getStartRegion] == nil) || (![sails isLocationEngineStarted] && [sailsPathRoutingManager getStartRegion] != nil)) {
+     [sailsPathRoutingManager enableRouting];
+        //[sails ]
+     //[self animateFunctionViewHorizontal:NaviView Hidden:false];
+     //sailsPinMarkerManager.hidden = true;
+     }
+    
     if ([sails isLocationEngineStarted]) {
         printf("Error");
         //set routing start point to current user location
         [sailsPathRoutingManager setStartRegion:nil];
+        [sailsPathRoutingManager setTargetRegion:location];
         
         //set routing end point marker icon image
-        [sailsPathRoutingManager setTargetMakerImage:[UIImage imageNamed:@"destination"]];
+        [sailsPathRoutingManager setTargetMakerImage:[UIImage imageNamed:@"BabyIcon"]];
         
         //set routing end point marker icon frame
         [sailsPathRoutingManager setTargetMakerFrame:48];
@@ -504,25 +613,28 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
         
         stopRoutingButton.hidden = false;
         
-        [self animateNaviViewLarge:true];
+        //[self animateNaviViewLarge:true];
         
     }else {
         printf("Error2");
         //set routing end point marker icon image
-        //[sailsPathRoutingManager setTargetMakerImage:[UIImage imageNamed:@"map_destination"]];
+        [sailsPathRoutingManager setTargetRegion:location];
+        [sailsMarkerManager setLocationRegionMarker:location andImage:[UIImage imageNamed:@"BabyIcon"] andMarkerFrame:48 andIsBoundCenter:true];
+        //[sailsPathRoutingManager setTargetMakerImage:[UIImage imageNamed:@"BabyIcon"]];
         
         //set routing end point marker icon frame
-        //[sailsPathRoutingManager setTargetMakerFrame:48];
+        [sailsPathRoutingManager setTargetMakerFrame:48];
+        
         
         //set routing path's color
-        //Paint *routingPathPaint = [sailsPathRoutingManager getPathPaint];
-        //routingPathPaint.strokeColor = [UIColor colorWithRed:133.0/255.0 green:176.0/255.0 blue:56.0/255.0 alpha:255.0/255.0];
+        Paint *routingPathPaint = [sailsPathRoutingManager getPathPaint];
+        routingPathPaint.strokeColor = [UIColor colorWithRed:133.0/255.0 green:176.0/255.0 blue:56.0/255.0 alpha:255.0/255.0];
         
-        //if ([sailsPathRoutingManager getStartRegion] != nil) {
-        //    stopRoutingButton.hidden = false;
-        //}
+        if ([sailsPathRoutingManager getStartRegion] != nil) {
+           stopRoutingButton.hidden = false;
+        }
     }
-    */
+    
 }
 -(void)viewDidDisappear{
     [clientSocket disconnect];
@@ -615,7 +727,7 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
             NSString * tmp = [[str componentsSeparatedByString:@"location\":\""] objectAtIndex:1];
             tmp = [tmp substringToIndex:[tmp rangeOfString:@"\",\"user"].location];
             if([tmp isEqual:@"unknown"])tmp=@"院共同實驗室College Common Lab";
-            [self setStartPlace:  [sails getLocationRegionList:@"2"][[self FindIndexByName:tmp]]];
+            [self setEndPlace:  [sails getLocationRegionList:@"2"][[self FindIndexByName:tmp]]];
             Place.text=tmp;
         }
     }
