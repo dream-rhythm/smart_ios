@@ -111,7 +111,7 @@ class StudentVC: BaseViewController,UITableViewDelegate,UITableViewDataSource{
             self.presentedViewController?.dismiss(animated: false, completion: nil)
         }*/
         
-        if(self.getIPaddress()=="172.20.10.11"){
+        if(self.getIPaddress()=="192.168.43.105"){
             reloadTable()
             Timer.scheduledTimer(timeInterval: 1, target : self, selector : #selector(StudentVC.loadData), userInfo : nil, repeats : false)
             //Thread.sleep(forTimeInterval: 1.5)
