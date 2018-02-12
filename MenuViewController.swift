@@ -61,15 +61,15 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     func updateArrayMenuOptions(){
         
-        arrayMenuOptions.append(["title":"首頁", "icon":"HomeIcon"])
-        arrayMenuOptions.append(["title":"登入","icon":"LoginIcon"])
-        arrayMenuOptions.append(["title":"校園地圖", "icon":"MapIcon"])
-        arrayMenuOptions.append(["title":"定位導引","icon":"NagivationIcon"])
-        arrayMenuOptions.append(["title":"尋找夥伴","icon":"FindFriendIcon"])
-        arrayMenuOptions.append(["title":"學生關懷","icon":"StudentIcon"])
-        arrayMenuOptions.append(["title":"即時畫面","icon":"StreamIcon"])
-        arrayMenuOptions.append(["title":"緊急通報","icon":"EmergencyIcon"])
-        arrayMenuOptions.append(["title":"我的寶貝","icon":"BabyIcon"])
+        arrayMenuOptions.append(["title":"Home", "icon":"HomeIcon"])
+        arrayMenuOptions.append(["title":"Login","icon":"LoginIcon"])
+        arrayMenuOptions.append(["title":"School Guide", "icon":"MapIcon"])
+        //arrayMenuOptions.append(["title":"School Guide","icon":"NagivationIcon"])
+        arrayMenuOptions.append(["title":"Find Friend","icon":"FindFriendIcon"])
+        arrayMenuOptions.append(["title":"My Video","icon":"StudentIcon"])
+        arrayMenuOptions.append(["title":"Live Scene","icon":"StreamIcon"])
+        arrayMenuOptions.append(["title":"SOS","icon":"EmergencyIcon"])
+        //arrayMenuOptions.append(["title":"我的寶貝","icon":"BabyIcon"])
         //arrayMenuOptions.append(["title":"系統設定","icon":"SettingIcon"])
         
         tblMenuOptions.reloadData()

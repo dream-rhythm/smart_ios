@@ -33,32 +33,32 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
             nowVCname="首頁"
             self.openViewControllerBasedOnIdentifier("Home")
             
-        case 2:
+        case 9999:
             print("MapVC\n", terminator: "")
             nowVCname="室內地圖"
             self.openViewControllerBasedOnIdentifier("MapVC")
             
-        case 3:
+        case 2:
             print("NagivationVC\n", terminator: "")
             nowVCname="定位導引"
             self.openViewControllerBasedOnIdentifier("NagivationVC")
             
-        case 4:
+        case 3:
             print("FindFriendVC\n",terminator:"")
             nowVCname="尋找夥伴"
             self.openViewControllerBasedOnIdentifier("FindFriendVC")
             
-        case 5:
+        case 4:
             print("StudentVC\n", terminator: "")
             nowVCname="學生關懷"
             self.openViewControllerBasedOnIdentifier("StudentVC")
             
-        case 6:
+        case 5:
             print("StreamVC\n",terminator: "")
             nowVCname="即時畫面"
             self.openViewControllerBasedOnIdentifier("StreamVC")
             
-        case 7:
+        case 6:
             print("EmergencyVC\n",terminator: "")
             nowVCname="緊急通報"
             self.openViewControllerBasedOnIdentifier("EmergencyVC")
