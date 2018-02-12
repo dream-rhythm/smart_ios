@@ -898,13 +898,13 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
         });
     }];
     
-    __weak MarkerManager *weakSailsMarkerManager = sailsMarkerManager;
-    __weak PathRoutingManager *weakRoutingManager = sailsPathRoutingManager;
+    //__weak MarkerManager *weakSailsMarkerManager = sailsMarkerManager;
+    //__weak PathRoutingManager *weakRoutingManager = sailsPathRoutingManager;
     __weak Sails *weakSails = sails;
-    __weak UIButton *weakStopRoutingButton = stopRoutingButton;
-    __weak Mybaby *weakSelf = self;
-    __weak UIView *weakNaviView = naviView;
-    __weak UIButton *weakPinMarkerButton = pinMarkerButton;
+    //__weak UIButton *weakStopRoutingButton = stopRoutingButton;
+    //__weak Mybaby *weakSelf = self;
+    //__weak UIView *weakNaviView = naviView;
+    //__weak UIButton *weakPinMarkerButton = pinMarkerButton;
     
     //create location change call back block
     [sails setOnLocationChangeEventBlock:^{

@@ -78,7 +78,7 @@ class StudentVC: BaseViewController,UITableViewDelegate,UITableViewDataSource{
     func reloadTable(){
         user?.sendStatus(statusNumber: 15)
         let msg = user?.getData()
-        print(msg)
+        print(msg ?? "(nil)")
         if(msg==""){
             
         }

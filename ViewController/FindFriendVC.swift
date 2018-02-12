@@ -41,7 +41,7 @@ class FindFriendVC: BaseViewController,UITableViewDelegate,UITableViewDataSource
         
     }
     func getUser(msg:String)->NSMutableArray{
-        var datas = NSMutableArray()
+        let datas = NSMutableArray()
         var msg2=msg
         /*
          if let idx = string.characters.index(of: needle) {
@@ -53,7 +53,7 @@ class FindFriendVC: BaseViewController,UITableViewDelegate,UITableViewDataSource
             //let idx=(msg2.range(of: "userName:\"")?.upperBound)!
             var range = msg2.range(of: "userName\":\"")
             //var startPos = msg2.characters.distance(from: msg2.characters.startIndex, to: (range?.lowerBound)!)
-            var endPos = msg2.characters.distance(from: msg2.characters.startIndex, to: (range?.upperBound)!)
+            let endPos = msg2.characters.distance(from: msg2.characters.startIndex, to: (range?.upperBound)!)
             var index = msg2.index(msg2.startIndex, offsetBy: endPos)
             var tmp = msg2.substring(from: index)//切出userName後面的東西
             
@@ -62,7 +62,7 @@ class FindFriendVC: BaseViewController,UITableViewDelegate,UITableViewDataSource
             //endPos = tmp.characters.distance(from: tmp.characters.startIndex, to: (range?.upperBound)!)
             index = tmp.index(tmp.startIndex, offsetBy: startPos)
             
-            var tmp2 = tmp.substring(to: index)
+            let tmp2 = tmp.substring(to: index)
             msg2 = tmp.substring(from: index)
             datas.add(tmp2)
         }
