@@ -199,8 +199,7 @@ typedef NS_ENUM(NSInteger, PathRoutingDirection) {
  * Call back path distance to current nearest transfer in the same floor.
  * (function work only when location engine is turn on)
  *
- * @param block path distance
- * @param block  nearest transfer type.
+ * @param block path distance and nearest transfer type.
  */
 - (void)setOnRoutingUpdateReachNearestTransferDistanceRefreshBlock:(void (^)(int distance, PathRoutingNodeType nodeType))block;
 
