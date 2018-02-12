@@ -198,7 +198,7 @@ extension SocketEnginePollable {
     }
 
     func parsePollingMessage(_ str: String) {
-        guard str.characters.count != 1 else { return }
+        guard str.count != 1 else { return }
 
         DefaultSocketLogger.Logger.log("Got poll message: %@", type: "SocketEnginePolling", args: str)
 

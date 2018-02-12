@@ -53,12 +53,12 @@ class FindFriendVC: BaseViewController,UITableViewDelegate,UITableViewDataSource
             //let idx=(msg2.range(of: "userName:\"")?.upperBound)!
             var range = msg2.range(of: "userName\":\"")
             //var startPos = msg2.characters.distance(from: msg2.characters.startIndex, to: (range?.lowerBound)!)
-            let endPos = msg2.characters.distance(from: msg2.characters.startIndex, to: (range?.upperBound)!)
+            let endPos = msg2.distance(from: msg2.startIndex, to: (range?.upperBound)!)
             var index = msg2.index(msg2.startIndex, offsetBy: endPos)
-            var tmp = msg2.substring(from: index)//切出userName後面的東西
+            let tmp = msg2.substring(from: index)//切出userName後面的東西
             
             range = tmp.range(of: "\"}")
-            var startPos = tmp.characters.distance(from: tmp.characters.startIndex, to: (range?.lowerBound)!)
+            let startPos = tmp.distance(from: tmp.startIndex, to: (range?.lowerBound)!)
             //endPos = tmp.characters.distance(from: tmp.characters.startIndex, to: (range?.upperBound)!)
             index = tmp.index(tmp.startIndex, offsetBy: startPos)
             

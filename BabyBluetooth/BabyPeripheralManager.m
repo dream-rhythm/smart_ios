@@ -77,7 +77,7 @@
 }
 
 - (BOOL)canStartAdvertising {
-    if (_peripheralManager.state != CBPeripheralManagerStatePoweredOn) {
+    if (_peripheralManager.state != CBManagerStatePoweredOn) {
         return NO;
     }
     if (didAddServices != _services.count) {
@@ -87,7 +87,7 @@
 }
 
 - (BOOL)isPoweredOn {
-    if (_peripheralManager.state != CBPeripheralManagerStatePoweredOn) {
+    if (_peripheralManager.state != CBManagerStatePoweredOn) {
         return NO;
     }
     return YES;
@@ -132,25 +132,25 @@
 
 - (void)peripheralManagerDidUpdateState:(CBPeripheralManager *)peripheral {
     switch (peripheral.state) {
-        case CBPeripheralManagerStateUnknown:
-            BabyLog(@">>>CBPeripheralManagerStateUnknown");
+        case CBManagerStateUnknown:
+            BabyLog(@">>>CBManagerStateUnknown");
             break;
-        case CBPeripheralManagerStateResetting:
-            BabyLog(@">>>CBPeripheralManagerStateResetting");
+        case CBManagerStateResetting:
+            BabyLog(@">>>CBManagerStateResetting");
             break;
-        case CBPeripheralManagerStateUnsupported:
-            BabyLog(@">>>CBPeripheralManagerStateUnsupported");
+        case CBManagerStateUnsupported:
+            BabyLog(@">>>CBManagerStateUnsupported");
             break;
-        case CBPeripheralManagerStateUnauthorized:
-            BabyLog(@">>>CBPeripheralManagerStateUnauthorized");
+        case CBManagerStateUnauthorized:
+            BabyLog(@">>>CBManagerStateUnauthorized");
             break;
-        case CBPeripheralManagerStatePoweredOff:
-            BabyLog(@">>>CBPeripheralManagerStatePoweredOff");
+        case CBManagerStatePoweredOff:
+            BabyLog(@">>>CBManagerStatePoweredOff");
             break;
-        case CBPeripheralManagerStatePoweredOn:
-            BabyLog(@">>>CBPeripheralManagerStatePoweredOn");
+        case CBManagerStatePoweredOn:
+            BabyLog(@">>>CBManagerStatePoweredOn");
             //发送centralManagerDidUpdateState通知
-            [[NSNotificationCenter defaultCenter]postNotificationName:@"CBPeripheralManagerStatePoweredOn" object:nil];
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"CBManagerStatePoweredOn" object:nil];
             break;
         default:
             break;
