@@ -20,13 +20,13 @@ class LoginVC: BaseViewController{
         user?.login(userName: userName.text!, userPasseord: password.text!)
         if (user?.isConnect())!{
             let alertController = UIAlertController(
-                title: "登入成功",
-                message: "登入成功",
+                title: "Message",
+                message: "Login Success",
                 preferredStyle: .alert)
             
             // 建立[確認]按鈕
             let okAction = UIAlertAction(
-                title: "確認",
+                title: "OK",
                 style: .default,
                 handler: {
                     (action: UIAlertAction!) -> Void in
@@ -44,13 +44,13 @@ class LoginVC: BaseViewController{
         }
         else{
             let alertController = UIAlertController(
-                title: "登入失敗",
-                message: "登入失敗",
+                title: "Message",
+                message: "Login Failed",
                 preferredStyle: .alert)
             
             // 建立[確認]按鈕
             let okAction = UIAlertAction(
-                title: "確認",
+                title: "OK",
                 style: .default,
                 handler: {
                     (action: UIAlertAction!) -> Void in

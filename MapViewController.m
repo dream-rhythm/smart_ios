@@ -99,7 +99,7 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
     scan_counter=0;
     IPAddress=@"192.168.43.105";
     // Do any additional setup after loading the view.
-    self.title = @"定位導引";
+    self.title = @"Scholl Guide";
     //self.transitioningDelegate=self;
     [self initSails];
     [self initUI];
@@ -228,7 +228,7 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
                          self.view.backgroundColor = [UIColor whiteColor];
                      }
                      failure:^(NSError *error) {
-                         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"SailsSDK" message:error.localizedDescription delegate:nil cancelButtonTitle:@"確定" otherButtonTitles:nil, nil];
+                         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"SailsSDK" message:error.localizedDescription delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
                          [alertView show];
                      }];
     
@@ -491,13 +491,13 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
 }
 - (IBAction)onIPsettingClick:(id)sender
 {
-    NSString *str = @"請輸入伺服器IP";
+    NSString *str = @"Please input server IP";
     
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"網路IP設定"
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Server IP Setting"
                                                     message:str
                                                    delegate:self
-                                          cancelButtonTitle:@"取消"
-                                          otherButtonTitles: @"確定", nil];
+                                          cancelButtonTitle:@"Cancel"
+                                          otherButtonTitles: @"OK", nil];
     
     // 設定樣式
     [alert setAlertViewStyle:UIAlertViewStylePlainTextInput];
@@ -513,7 +513,7 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
     //提示
     switch (buttonIndex) {
         case 0:
-            printf("取消..");
+            printf("Cancel..");
             break;
         case 1:
             // Xcode5.0 之後的做法，在此進行讀取

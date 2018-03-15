@@ -49,13 +49,19 @@ class StreamVC: BaseViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         //player.pause()
-        myWebView.stopLoading()
+        var url = self.getIPaddress()
+        url = "http://"+url + "/iGuiding/pleaseChoose.html"
+        print(url)
+        let urlRequest = NSURLRequest(url: URL(string: url)!)
+        myWebView.loadRequest(urlRequest as URLRequest)
+        
+        //myWebView.stopLoading()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.addSlideMenuButton()
-        self.title="即時畫面"
+        self.title="Live Scene"
         myWebView.frame=CGRect(x: 0, y: 57, width: screenSize.width, height: screenSize.height/3*2)
         PIC1.frame=CGRect(x: screenSize.width/2-95, y: screenSize.height/3*2+80, width: 40, height: 40)
         Buttom1.frame=CGRect(x: screenSize.width/2-70, y: screenSize.height/3*2+65, width: 200, height: 72)

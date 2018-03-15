@@ -11,13 +11,13 @@ import UIKit
 class EmergencyVC: BaseViewController {
 
     @IBAction func CallTeacher(_ sender: Any) {
-        let phoneNumber = URL(string:"tel://0424515502")!
+        let phoneNumber = URL(string:"tel://002886424515502")!
         UIApplication.shared.open(phoneNumber, options: [:], completionHandler: nil)
         
     }
     
     @IBAction func CallPolice(_ sender: Any) {
-        let phoneNumber = URL(string:"tel://110")!
+        let phoneNumber = URL(string:"tel://100")!
         UIApplication.shared.open(phoneNumber, options: [:], completionHandler: nil)
     }
     
@@ -25,7 +25,7 @@ class EmergencyVC: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.addSlideMenuButton()
-        self.title="緊急通報"
+        self.title="SOS"
         // Do any additional setup after loading the view.
     }
 

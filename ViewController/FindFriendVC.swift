@@ -27,7 +27,7 @@ class FindFriendVC: BaseViewController,UITableViewDelegate,UITableViewDataSource
     override func viewDidLoad() {
         super.viewDidLoad()
         self.addSlideMenuButton()
-        self.title="夥伴列表"
+        self.title="My Friend"
         user = User()
         user?.autoLogin()
         user?.setStatus(Status: 2)

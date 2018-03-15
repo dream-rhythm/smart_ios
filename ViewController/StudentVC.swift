@@ -119,20 +119,20 @@ class StudentVC: BaseViewController,UITableViewDelegate,UITableViewDataSource{
         }
         else{
             Thread.sleep(forTimeInterval: 2)
-            let alertController2 = UIAlertController(title: "錯誤",
-                                                     message: "無法連接至伺服器...", preferredStyle: .alert)
+            let alertController2 = UIAlertController(title: "Error",
+                                                     message: "Can not connect to server...", preferredStyle: .alert)
             
-            let okAction = UIAlertAction(title: "好的", style: .default, handler: nil)
+            let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
             alertController2.addAction(okAction)
             self.present(alertController2, animated: true, completion: nil)
         }
     }
     func loadData(){
         reloadTable()
-        let alertController2 = UIAlertController(title: "系统提示",
-                                                 message: "載入完成", preferredStyle: .alert)
+        let alertController2 = UIAlertController(title: "Message",
+                                                 message: "Load Succes", preferredStyle: .alert)
         
-        let okAction = UIAlertAction(title: "好的", style: .default, handler: {
+        let okAction = UIAlertAction(title: "OK", style: .default, handler: {
             (action: UIAlertAction!) -> Void in
             self.reloadTable()
             self.tableView.reloadData()
@@ -154,7 +154,7 @@ class StudentVC: BaseViewController,UITableViewDelegate,UITableViewDataSource{
         user = User()
         user?.autoLogin()
         //Time2.lineBreakMode =  .byWordWrapping
-        self.title="學生關懷"
+        self.title="My Video"
         myWebView.frame=CGRect(x: 0, y: 60, width: screenSize.width, height: screenSize.height/3-9)
         //myWebView.delegate = self
         video = "Lin0.mp4"

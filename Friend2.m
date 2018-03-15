@@ -82,7 +82,7 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.title = @"我的寶貝";
+    self.title = @"My friend";
     str = @"";
     [self initSails];
     [self initUI];
@@ -162,13 +162,13 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
 }
 - (IBAction)onIPsettingClick:(id)sender
 {
-    NSString *str = @"請輸入伺服器IP";
+    NSString *str = @"Please input server IP";
     
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"網路IP設定"
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"IP Setting"
                                                     message:str
                                                    delegate:self
-                                          cancelButtonTitle:@"取消"
-                                          otherButtonTitles: @"確定", nil];
+                                          cancelButtonTitle:@"Cancel"
+                                          otherButtonTitles: @"OK", nil];
     
     // 設定樣式
     [alert setAlertViewStyle:UIAlertViewStylePlainTextInput];
