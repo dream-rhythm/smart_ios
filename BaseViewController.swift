@@ -118,7 +118,7 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
                 ipAddress = result[0].serverIP!
             }
         
-            let SettingBox :UIAlertController = UIAlertController(title: "網路IP設定", message: "請輸入伺服器IP", preferredStyle: .alert)
+            let SettingBox :UIAlertController = UIAlertController(title: "IP Setting", message: "Please input server IP", preferredStyle: .alert)
         
             SettingBox.addTextField {
                 (textField: UITextField!) -> Void in
@@ -126,9 +126,9 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
                 textField.text = ipAddress
             }
         
-            SettingBox.addAction(UIAlertAction(title: "取消",style: .cancel,handler: nil))
+            SettingBox.addAction(UIAlertAction(title: "Cancel",style: .cancel,handler: nil))
         
-            let okAction = UIAlertAction(title:"確定",style: UIAlertActionStyle.default){
+            let okAction = UIAlertAction(title:"OK",style: UIAlertActionStyle.default){
                 (action: UIAlertAction!) -> Void in
                 let IPAddress = (SettingBox.textFields?.first)! as UITextField
                 if(number != 0){
