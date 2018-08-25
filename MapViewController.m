@@ -99,7 +99,7 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
     scan_counter=0;
     IPAddress=@"192.168.43.105";
     // Do any additional setup after loading the view.
-    self.title = @"Scholl Guide";
+    self.title = @"Campus Guide";
     //self.transitioningDelegate=self;
     [self initSails];
     [self initUI];
@@ -123,18 +123,18 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
         Name = peripheral.name;
         rssi = [RSSI intValue];
         if(rssi>0)rssi=-100;
-        if([Name isEqualToString:@"WoodBeacon3"]==true){
+        if([Name isEqualToString:@"abeacon_3133"]==true){
             //專題研究室
             Place_research=rssi;
         }
-        else if([Name isEqualToString:@"WoodBeacon2"]==true){
+        else if([Name isEqualToString:@"abeacon_3267"]==true){
             //三國
             Place_3Global=rssi;
         }
-        else if([Name isEqualToString:@"HM-10"]==true){
+        else if([Name isEqualToString:@"abeacon_2B24"]==true){
             place_HM=rssi;
         }
-        else if([Name isEqualToString:@"corner05"]==true){
+        else if([Name isEqualToString:@"abeacon_2B24"]==true){
             //無線網路研究室
             Place_Lab=rssi;
         }

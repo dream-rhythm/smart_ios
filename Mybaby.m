@@ -268,7 +268,7 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
     
     //先將文字框 TextField 設定為實體物件
     nameField = [alert textFieldAtIndex:0];
-    //phoneField = [alert textFieldAtIndex:1];
+    
     
     [alert show];
 }

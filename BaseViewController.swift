@@ -30,7 +30,7 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
         switch(index){
         case 0:
             print("Home\n", terminator: "")
-            nowVCname="首頁"
+            nowVCname="Home"
             self.openViewControllerBasedOnIdentifier("Home")
             
         case 9999:
@@ -40,33 +40,33 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
             
         case 2:
             print("NagivationVC\n", terminator: "")
-            nowVCname="定位導引"
+            nowVCname="Campus Guide"
             self.openViewControllerBasedOnIdentifier("NagivationVC")
             
         case 3:
             print("FindFriendVC\n",terminator:"")
-            nowVCname="尋找夥伴"
+            nowVCname="Find Friend"
             self.openViewControllerBasedOnIdentifier("FindFriendVC")
             
         case 4:
             print("StudentVC\n", terminator: "")
-            nowVCname="學生關懷"
+            nowVCname="My Video"
             self.openViewControllerBasedOnIdentifier("StudentVC")
             
         case 5:
             print("StreamVC\n",terminator: "")
-            nowVCname="即時畫面"
+            nowVCname="Live Sense"
             self.openViewControllerBasedOnIdentifier("StreamVC")
             
         case 6:
             print("EmergencyVC\n",terminator: "")
-            nowVCname="緊急通報"
+            nowVCname="SOS"
             self.openViewControllerBasedOnIdentifier("EmergencyVC")
         case 1:
             print("LoginVC\n",terminator: "")
-            nowVCname="登入頁面"
+            nowVCname="Login"
             self.openViewControllerBasedOnIdentifier("LoginVC")
-        case 8:
+        case 999:
             print("Mybaby")
             nowVCname="我的寶貝"
             self.openViewControllerBasedOnIdentifier("Mybaby")
