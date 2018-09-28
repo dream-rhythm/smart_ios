@@ -280,7 +280,7 @@
 //查找Peripherals
 - (BabyBluetooth *(^)()) scanForPeripherals {
     return ^BabyBluetooth *() {
-        [babyCentralManager->pocket setObject:@"YES" forKey:@"needScanForPeripherals"];
+        [self->babyCentralManager->pocket setObject:@"YES" forKey:@"needScanForPeripherals"];
         return self;
     };
 }
@@ -288,7 +288,7 @@
 //连接Peripherals
 - (BabyBluetooth *(^)()) connectToPeripherals {
     return ^BabyBluetooth *() {
-        [babyCentralManager->pocket setObject:@"YES" forKey:@"needConnectPeripheral"];
+        [self->babyCentralManager->pocket setObject:@"YES" forKey:@"needConnectPeripheral"];
         return self;
     };
 }
@@ -296,7 +296,7 @@
 //发现Services
 - (BabyBluetooth *(^)()) discoverServices {
     return ^BabyBluetooth *() {
-        [babyCentralManager->pocket setObject:@"YES" forKey:@"needDiscoverServices"];
+        [self->babyCentralManager->pocket setObject:@"YES" forKey:@"needDiscoverServices"];
         return self;
     };
 }
@@ -304,7 +304,7 @@
 //获取Characteristics
 - (BabyBluetooth *(^)()) discoverCharacteristics {
     return ^BabyBluetooth *() {
-        [babyCentralManager->pocket setObject:@"YES" forKey:@"needDiscoverCharacteristics"];
+        [self->babyCentralManager->pocket setObject:@"YES" forKey:@"needDiscoverCharacteristics"];
         return self;
     };
 }
@@ -312,7 +312,7 @@
 //更新Characteristics的值
 - (BabyBluetooth *(^)()) readValueForCharacteristic {
     return ^BabyBluetooth *() {
-        [babyCentralManager->pocket setObject:@"YES" forKey:@"needReadValueForCharacteristic"];
+        [self->babyCentralManager->pocket setObject:@"YES" forKey:@"needReadValueForCharacteristic"];
         return self;
     };
 }
@@ -320,7 +320,7 @@
 //设置查找到Descriptors名称的block
 - (BabyBluetooth *(^)()) discoverDescriptorsForCharacteristic {
     return ^BabyBluetooth *() {
-        [babyCentralManager->pocket setObject:@"YES" forKey:@"needDiscoverDescriptorsForCharacteristic"];
+        [self->babyCentralManager->pocket setObject:@"YES" forKey:@"needDiscoverDescriptorsForCharacteristic"];
         return self;
     };
 }
@@ -328,7 +328,7 @@
 //设置读取到Descriptors值的block
 - (BabyBluetooth *(^)()) readValueForDescriptors {
     return ^BabyBluetooth *() {
-        [babyCentralManager->pocket setObject:@"YES" forKey:@"needReadValueForDescriptors"];
+        [self->babyCentralManager->pocket setObject:@"YES" forKey:@"needReadValueForDescriptors"];
         return self;
     };
 }
@@ -337,40 +337,40 @@
 - (BabyBluetooth *(^)()) begin {
     return ^BabyBluetooth *() {
         //取消未执行的stop定时任务
-        [timerForStop invalidate];
+        [self->timerForStop invalidate];
         dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             [self resetSeriseParmeter];
             //处理链式函数缓存的数据
-            if ([[babyCentralManager->pocket valueForKey:@"needScanForPeripherals"] isEqualToString:@"YES"]) {
-                babyCentralManager->needScanForPeripherals = YES;
+            if ([[self->babyCentralManager->pocket valueForKey:@"needScanForPeripherals"] isEqualToString:@"YES"]) {
+                self->babyCentralManager->needScanForPeripherals = YES;
             }
-            if ([[babyCentralManager->pocket valueForKey:@"needConnectPeripheral"] isEqualToString:@"YES"]) {
-                babyCentralManager->needConnectPeripheral = YES;
+            if ([[self->babyCentralManager->pocket valueForKey:@"needConnectPeripheral"] isEqualToString:@"YES"]) {
+                self->babyCentralManager->needConnectPeripheral = YES;
             }
-            if ([[babyCentralManager->pocket valueForKey:@"needDiscoverServices"] isEqualToString:@"YES"]) {
-                babyCentralManager->needDiscoverServices = YES;
+            if ([[self->babyCentralManager->pocket valueForKey:@"needDiscoverServices"] isEqualToString:@"YES"]) {
+                self->babyCentralManager->needDiscoverServices = YES;
             }
-            if ([[babyCentralManager->pocket valueForKey:@"needDiscoverCharacteristics"] isEqualToString:@"YES"]) {
-                babyCentralManager->needDiscoverCharacteristics = YES;
+            if ([[self->babyCentralManager->pocket valueForKey:@"needDiscoverCharacteristics"] isEqualToString:@"YES"]) {
+                self->babyCentralManager->needDiscoverCharacteristics = YES;
             }
-            if ([[babyCentralManager->pocket valueForKey:@"needReadValueForCharacteristic"] isEqualToString:@"YES"]) {
-                babyCentralManager->needReadValueForCharacteristic = YES;
+            if ([[self->babyCentralManager->pocket valueForKey:@"needReadValueForCharacteristic"] isEqualToString:@"YES"]) {
+                self->babyCentralManager->needReadValueForCharacteristic = YES;
             }
-            if ([[babyCentralManager->pocket valueForKey:@"needDiscoverDescriptorsForCharacteristic"] isEqualToString:@"YES"]) {
-                babyCentralManager->needDiscoverDescriptorsForCharacteristic = YES;
+            if ([[self->babyCentralManager->pocket valueForKey:@"needDiscoverDescriptorsForCharacteristic"] isEqualToString:@"YES"]) {
+                self->babyCentralManager->needDiscoverDescriptorsForCharacteristic = YES;
             }
-            if ([[babyCentralManager->pocket valueForKey:@"needReadValueForDescriptors"] isEqualToString:@"YES"]) {
-                babyCentralManager->needReadValueForDescriptors = YES;
+            if ([[self->babyCentralManager->pocket valueForKey:@"needReadValueForDescriptors"] isEqualToString:@"YES"]) {
+                self->babyCentralManager->needReadValueForDescriptors = YES;
             }
             //调整委托方法的channel，如果没设置默认为缺省频道
-            NSString *channel = [babyCentralManager->pocket valueForKey:@"channel"];
-            [babySpeaker switchChannel:channel];
+            NSString *channel = [self->babyCentralManager->pocket valueForKey:@"channel"];
+            [self->babySpeaker switchChannel:channel];
             //缓存的peripheral
-            CBPeripheral *cachedPeripheral = [babyCentralManager->pocket valueForKey:NSStringFromClass([CBPeripheral class])];
+            CBPeripheral *cachedPeripheral = [self->babyCentralManager->pocket valueForKey:NSStringFromClass([CBPeripheral class])];
             //校验series合法性
             [self validateProcess];
             //清空pocjet
-            babyCentralManager->pocket = [[NSMutableDictionary alloc]init];
+            self->babyCentralManager->pocket = [[NSMutableDictionary alloc]init];
             //开始扫描或连接设备
             [self start:cachedPeripheral];
         });
@@ -417,9 +417,9 @@
         BabyLog(@">>> stop in %d sec",sec);
         
         //听见定时器执行babyStop
-        timerForStop = [NSTimer timerWithTimeInterval:sec target:self selector:@selector(babyStop) userInfo:nil repeats:NO];
-        [timerForStop setFireDate: [[NSDate date]dateByAddingTimeInterval:sec]];
-        [[NSRunLoop currentRunLoop] addTimer:timerForStop forMode:NSRunLoopCommonModes];
+        self->timerForStop = [NSTimer timerWithTimeInterval:sec target:self selector:@selector(babyStop) userInfo:nil repeats:NO];
+        [self->timerForStop setFireDate: [[NSDate date]dateByAddingTimeInterval:sec]];
+        [[NSRunLoop currentRunLoop] addTimer:self->timerForStop forMode:NSRunLoopCommonModes];
         
         return self;
     };
@@ -450,7 +450,7 @@
 //持有对象
 - (BabyBluetooth *(^)(id obj)) having {
     return ^(id obj) {
-        [babyCentralManager->pocket setObject:obj forKey:NSStringFromClass([obj class])];
+        [self->babyCentralManager->pocket setObject:obj forKey:NSStringFromClass([obj class])];
         return self;
     };
 }
@@ -460,7 +460,7 @@
 - (BabyBluetooth *(^)(NSString *channel)) channel {
     return ^BabyBluetooth *(NSString *channel) {
         //先缓存数据，到begin方法统一处理
-        [babyCentralManager->pocket setValue:channel forKey:@"channel"];
+        [self->babyCentralManager->pocket setValue:channel forKey:@"channel"];
         return self;
     };
 }
@@ -631,13 +631,13 @@ characteristic:(CBCharacteristic *)characteristic
 
 - (BabyPeripheralManager *(^)()) bePeripheral {
     return ^BabyPeripheralManager* () {
-        return babyPeripheralManager;
+        return self->babyPeripheralManager;
     };
 }
 - (BabyPeripheralManager *(^)(NSString *localName)) bePeripheralWithName {
     return ^BabyPeripheralManager* (NSString *localName) {
-        babyPeripheralManager.localName = localName;
-        return babyPeripheralManager;
+        self->babyPeripheralManager.localName = localName;
+        return self->babyPeripheralManager;
     };
 }
 

@@ -33,32 +33,32 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
             nowVCname="Home"
             self.openViewControllerBasedOnIdentifier("Home")
             
-        case 9999:
+        case 2:
             print("MapVC\n", terminator: "")
             nowVCname="室內地圖"
             self.openViewControllerBasedOnIdentifier("MapVC")
             
-        case 2:
+        case 999:
             print("NagivationVC\n", terminator: "")
             nowVCname="Campus Guide"
             self.openViewControllerBasedOnIdentifier("NagivationVC")
             
-        case 3:
+        case 998:
             print("FindFriendVC\n",terminator:"")
             nowVCname="Find Friend"
             self.openViewControllerBasedOnIdentifier("FindFriendVC")
             
-        case 4:
+        case 3:
             print("StudentVC\n", terminator: "")
             nowVCname="My Video"
             self.openViewControllerBasedOnIdentifier("StudentVC")
             
-        case 5:
+        case 4:
             print("StreamVC\n",terminator: "")
             nowVCname="Live Sense"
             self.openViewControllerBasedOnIdentifier("StreamVC")
             
-        case 6:
+        case 997:
             print("EmergencyVC\n",terminator: "")
             nowVCname="SOS"
             self.openViewControllerBasedOnIdentifier("EmergencyVC")
@@ -66,7 +66,7 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
             print("LoginVC\n",terminator: "")
             nowVCname="Login"
             self.openViewControllerBasedOnIdentifier("LoginVC")
-        case 999:
+        case 5:
             print("Mybaby")
             nowVCname="我的寶貝"
             self.openViewControllerBasedOnIdentifier("Mybaby")
@@ -219,7 +219,7 @@ class BaseViewController: UIViewController, SlideMenuDelegate {
     
     func onSlideMenuButtonPressed(_ sender : UIButton){
         //nowVCname=self.title! as String
-        self.title="iGuiding"
+        self.title="iBaby"
         if (sender.tag == 10)
         {
             // To Hide Menu If it already there

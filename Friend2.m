@@ -122,23 +122,23 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
     
     //设置扫描到设备的委托
     [baby2 setBlockOnDiscoverToPeripherals:^(CBCentralManager *central, CBPeripheral *peripheral, NSDictionary *advertisementData, NSNumber *RSSI) {
-        Name = peripheral.name;
-        rssi = [RSSI intValue];
-        if(rssi>0)rssi=-100;
-        if([Name isEqualToString:@"abeacon_3133"]==true){
+        self->Name = peripheral.name;
+        self->rssi = [RSSI intValue];
+        if(self->rssi>0)self->rssi=-100;
+        if([self->Name isEqualToString:@"abeacon_3133"]==true){
             //專題研究室
-            Place_research=rssi;
+            self->Place_research=self->rssi;
         }
-        else if([Name isEqualToString:@"abeacon_3267"]==true){
+        else if([self->Name isEqualToString:@"abeacon_3267"]==true){
             //三國
-            Place_3Global=rssi;
+            self->Place_3Global=self->rssi;
         }
-        else if([Name isEqualToString:@"abeacon_2B24"]==true){
-            place_HM=rssi;
+        else if([self->Name isEqualToString:@"abeacon_2B24"]==true){
+            self->place_HM=self->rssi;
         }
         else{
             //無線網路研究室
-            Place_Lab=rssi;
+            self->Place_Lab=self->rssi;
         }
         
         printf("Yes");
@@ -437,13 +437,13 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
     [sails loadCloudBuilding:@"11368c21cf464c1aa587b7ede79aab8b"
                   buildingID:@"5405920d1ff15731210001f3"
                      success:^(void){
-                         floorNameList = [sails getFloorNameList];
-                         [weakSailsMapView loadFloorMap:[floorNameList objectAtIndex:0]];
+                         self->floorNameList = [self->sails getFloorNameList];
+                         [weakSailsMapView loadFloorMap:[self->floorNameList objectAtIndex:0]];
                          //weakSelf.navigationItem.title = [sails getFloorDescription:[floorNameList firstObject]];
                          //[sails setGPSFloorLayer:[floorNameList lastObject]];
-                         allLocationRegionOfFloors = [weakSelf getAllLocationRegionOfFloors];
+                         self->allLocationRegionOfFloors = [weakSelf getAllLocationRegionOfFloors];
                          [weakSailsMapView startAnimationToZoom:18];
-                         [poiTableView reloadData];
+                         [self->poiTableView reloadData];
                          self.view.backgroundColor = [UIColor whiteColor];
                      }
                      failure:^(NSError *error) {
@@ -685,10 +685,10 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
         //set routing end point location
         [self->clientSocket writeData:[@"{\"status\":2}\r\n" dataUsingEncoding:NSUTF8StringEncoding] withTimeout:-1 tag:0];
 
-        NSString * tmp = [[str componentsSeparatedByString:@"location\":\""] objectAtIndex:1];
+        NSString * tmp = [[self->str componentsSeparatedByString:@"location\":\""] objectAtIndex:1];
         tmp = [tmp substringToIndex:[tmp rangeOfString:@"\",\"user"].location];
         if([tmp isEqual:@"unknown"])tmp=@"院共同實驗室College Common Lab";
-        [weakRoutingManager setTargetRegion:[sails getLocationRegionList:@"2"][[self FindIndexByName:tmp]]];
+        [weakRoutingManager setTargetRegion:[self->sails getLocationRegionList:@"2"][[self FindIndexByName:tmp]]];
         
         //begin to route
         if (([weakSails isLocationEngineStarted] && [weakRoutingManager getStartRegion] == nil) || (![weakSails isLocationEngineStarted] && [weakRoutingManager getStartRegion] != nil)) {
@@ -697,10 +697,10 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
             weakPinMarkerButton.hidden = true;
         }
         
-        if(Place_3Global==-100&&Place_Lab==-100&&Place_research==-100){
+        if(self->Place_3Global==-100&&self->Place_Lab==-100&&Place_research==-100){
             //[sailsMarkerManager clearMarkers];
-            [sailsPathRoutingManager setStartRegion:[sails getLocationRegionList:@"2"][[self FindIndexByName:tmp]]];
-            [sailsMarkerManager setLocationRegionMarker:[sails getLocationRegionList:@"2"][[self FindIndexByName:tmp]] andImage:[UIImage imageNamed:@"start_point"] andMarkerFrame:48 andIsBoundCenter:true];
+            [self->sailsPathRoutingManager setStartRegion:[self->sails getLocationRegionList:@"2"][[self FindIndexByName:tmp]]];
+            [self->sailsMarkerManager setLocationRegionMarker:[self->sails getLocationRegionList:@"2"][[self FindIndexByName:tmp]] andImage:[UIImage imageNamed:@"start_point"] andMarkerFrame:48 andIsBoundCenter:true];
         }
         
         
@@ -1040,9 +1040,9 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
             newFrame.size.height = 120.0;
             [UIView animateWithDuration:0.2f
                              animations:^{
-                                 naviView.frame = newFrame;
-                                 currentDistanceLabel.hidden = NO;
-                                 naviLabel.hidden = NO;
+                                 self->naviView.frame = newFrame;
+                                 self->currentDistanceLabel.hidden = NO;
+                                 self->naviLabel.hidden = NO;
                              }];
         }
     }else {
@@ -1050,9 +1050,9 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
             newFrame.size.height = 30.0;
             [UIView animateWithDuration:0.2f
                              animations:^{
-                                 naviView.frame = newFrame;
-                                 currentDistanceLabel.hidden = YES;
-                                 naviLabel.hidden = YES;
+                                 self->naviView.frame = newFrame;
+                                 self->currentDistanceLabel.hidden = YES;
+                                 self->naviLabel.hidden = YES;
                              }];
         }
     }

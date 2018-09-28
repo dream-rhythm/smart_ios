@@ -39,10 +39,10 @@ class NagivationVC: BaseViewController , CLLocationManagerDelegate{
         
         self.view = sailsMapView
         sails.setSailsLocationMapView(sailsMapView)
-        sails.loadCloudBuilding("f97a3d71447844c8be7d66b5d1934e42", buildingID: "58abadf5cb4a9a2b09000162", success: (() -> Void)!{
+        sails.loadCloudBuilding("f97a3d71447844c8be7d66b5d1934e42", buildingID: "58abadf5cb4a9a2b09000162", success: (() -> Void)?{
             self.sails.startLocatingEngine()
             let floorNameList = self.sails.getFloorNameList()
-            self.sailsMapView.loadFloorMap(floorNameList?[1] as! String!)
+            self.sailsMapView.loadFloorMap(floorNameList?[1] as! String?)
             self.sailsMapView.startAnimation(toZoom: 18)
         }, failure: {(e:Error?)in })
         

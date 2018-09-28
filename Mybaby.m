@@ -133,38 +133,38 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
     
     //设置扫描到设备的委托
     [baby3 setBlockOnDiscoverToPeripherals:^(CBCentralManager *central, CBPeripheral *peripheral, NSDictionary *advertisementData, NSNumber *RSSI) {
-        Name = peripheral.name;
-        rssi = [RSSI intValue];
-        if(rssi<0){
-        if([Name isEqualToString:@"WoodBeacon3"]==true){
+        self->Name = peripheral.name;
+        self->rssi = [RSSI intValue];
+        if(self->rssi<0){
+            if([self->Name isEqualToString:@"WoodBeacon3"]==true){
             //專題研究室
     
-            Place_research+=rssi;
-            Times_research++;
+                self->Place_research+=self->rssi;
+                self->Times_research++;
         }
-        else if([Name isEqualToString:@"WoodBeacon2"]==true){
+            else if([self->Name isEqualToString:@"WoodBeacon2"]==true){
             //三國
-            Place_3Global+=rssi;
-            Times_3Global++;
+                self->Place_3Global+=self->rssi;
+                self->Times_3Global++;
         }
-        else if([Name isEqualToString:@"HM-10"]==true){
-            place_HM+=[self calcDistByRSSI:place_HM];
-            HM_counter++;
-            if(baby_alert_range==3)baby_alert_range=0;
+            else if([self->Name isEqualToString:@"HM-10"]==true){
+                self->place_HM+=[self calcDistByRSSI:self->place_HM];
+                self->HM_counter++;
+                if(self->baby_alert_range==3)self->baby_alert_range=0;
         }
-        else if([Name isEqualToString:@"HM-11"]==true){
-            place_HM+=[self calcDistByRSSI:place_HM];
-            HM_counter++;
-            if(baby_alert_range==3)baby_alert_range=0;
+            else if([self->Name isEqualToString:@"HM-11"]==true){
+                self->place_HM+=[self calcDistByRSSI:self->place_HM];
+                self->HM_counter++;
+                if(self->baby_alert_range==3)self->baby_alert_range=0;
             
             [self alert_baby];
             
             
         }
-        else if([Name isEqualToString:@"corner05"]==true){
+            else if([self->Name isEqualToString:@"corner05"]==true){
             //無線網路研究室
-            Place_Lab+=rssi;
-            Times_Lab++;
+                self->Place_Lab+=self->rssi;
+                self->Times_Lab++;
         }
         }
         printf("搜索到了设备:%s(Rssi=%s)\n",[peripheral.name UTF8String],[[RSSI stringValue] UTF8String]);
@@ -693,13 +693,13 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
     [sails loadCloudBuilding:@"11368c21cf464c1aa587b7ede79aab8b"
                   buildingID:@"5405920d1ff15731210001f3"
                      success:^(void){
-                         floorNameList = [sails getFloorNameList];
-                         [weakSailsMapView loadFloorMap:[floorNameList objectAtIndex:0]];
+                         self->floorNameList = [self->sails getFloorNameList];
+                         [weakSailsMapView loadFloorMap:[self->floorNameList objectAtIndex:0]];
                          //weakSelf.navigationItem.title = [sails getFloorDescription:[floorNameList firstObject]];
                          //[sails setGPSFloorLayer:[floorNameList lastObject]];
-                         allLocationRegionOfFloors = [weakSelf getAllLocationRegionOfFloors];
+                         self->allLocationRegionOfFloors = [weakSelf getAllLocationRegionOfFloors];
                          [weakSailsMapView startAnimationToZoom:18];
-                         [poiTableView reloadData];
+                         [self->poiTableView reloadData];
                          self.view.backgroundColor = [UIColor whiteColor];
                      }
                      failure:^(NSError *error) {
@@ -1332,9 +1332,9 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
             newFrame.size.height = 120.0;
             [UIView animateWithDuration:0.2f
                              animations:^{
-                                 naviView.frame = newFrame;
-                                 currentDistanceLabel.hidden = NO;
-                                 naviLabel.hidden = NO;
+                                 self->naviView.frame = newFrame;
+                                 self->currentDistanceLabel.hidden = NO;
+                                 self->naviLabel.hidden = NO;
                              }];
         }
     }else {
@@ -1342,9 +1342,9 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
             newFrame.size.height = 30.0;
             [UIView animateWithDuration:0.2f
                              animations:^{
-                                 naviView.frame = newFrame;
-                                 currentDistanceLabel.hidden = YES;
-                                 naviLabel.hidden = YES;
+                                 self->naviView.frame = newFrame;
+                                 self->currentDistanceLabel.hidden = YES;
+                                 self->naviLabel.hidden = YES;
                              }];
         }
     }

@@ -31,38 +31,38 @@
     return ^BabyPeripheralManager *() {
         
         if ([self canStartAdvertising]) {
-            PERIPHERAL_MANAGER_INIT_WAIT_TIMES = 0;
+            self->PERIPHERAL_MANAGER_INIT_WAIT_TIMES = 0;
             NSMutableArray *UUIDS = [NSMutableArray array];
-            for (CBMutableService *s in _services) {
+            for (CBMutableService *s in self->_services) {
                 [UUIDS addObject:s.UUID];
             }
             //启动广播
-            if (_manufacturerData) {
-                [_peripheralManager startAdvertising:
+            if (self->_manufacturerData) {
+                [self->_peripheralManager startAdvertising:
                  @{
                    CBAdvertisementDataServiceUUIDsKey :  UUIDS
-                   ,CBAdvertisementDataLocalNameKey : _localName,
-                   CBAdvertisementDataManufacturerDataKey:_manufacturerData
+                   ,CBAdvertisementDataLocalNameKey : self->_localName,
+                   CBAdvertisementDataManufacturerDataKey:self->_manufacturerData
                 }];
             } else {
-                [_peripheralManager startAdvertising:
+                [self->_peripheralManager startAdvertising:
                  @{
                    CBAdvertisementDataServiceUUIDsKey :  UUIDS
-                   ,CBAdvertisementDataLocalNameKey : _localName
+                   ,CBAdvertisementDataLocalNameKey : self->_localName
                    }];
             }
           
         }
         else {
-            PERIPHERAL_MANAGER_INIT_WAIT_TIMES++;
-            if (PERIPHERAL_MANAGER_INIT_WAIT_TIMES > 5) {
-                BabyLog(@">>>error： 第%d次等待peripheralManager打开任然失败，请检查蓝牙设备是否可用",PERIPHERAL_MANAGER_INIT_WAIT_TIMES);
+            self->PERIPHERAL_MANAGER_INIT_WAIT_TIMES++;
+            if (self->PERIPHERAL_MANAGER_INIT_WAIT_TIMES > 5) {
+                BabyLog(@">>>error： 第%d次等待peripheralManager打开任然失败，请检查蓝牙设备是否可用",self->PERIPHERAL_MANAGER_INIT_WAIT_TIMES);
             }
             dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, 3.0 * NSEC_PER_SEC);
             dispatch_after(popTime, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                 self.startAdvertising();
             });
-            BabyLog(@">>> 第%d次等待peripheralManager打开",PERIPHERAL_MANAGER_INIT_WAIT_TIMES);
+            BabyLog(@">>> 第%d次等待peripheralManager打开",self->PERIPHERAL_MANAGER_INIT_WAIT_TIMES);
         }
         
         return self;
@@ -71,7 +71,7 @@
 
 - (BabyPeripheralManager *(^)())stopAdvertising {
     return ^BabyPeripheralManager*() {
-        [_peripheralManager stopAdvertising];
+        [self->_peripheralManager stopAdvertising];
         return self;
     };
 }
@@ -95,7 +95,7 @@
 
 - (BabyPeripheralManager *(^)(NSArray *array))addServices {
     return ^BabyPeripheralManager*(NSArray *array) {
-        _services = [NSMutableArray arrayWithArray:array];
+        self->_services = [NSMutableArray arrayWithArray:array];
         [self addServicesToPeripheral];
         return self;
     };
@@ -103,15 +103,15 @@
 
 - (BabyPeripheralManager *(^)())removeAllServices {
     return ^BabyPeripheralManager*() {
-        didAddServices = 0;
-        [_peripheralManager removeAllServices];
+        self->didAddServices = 0;
+        [self->_peripheralManager removeAllServices];
         return self;
     };
 }
 
 - (BabyPeripheralManager *(^)(NSData *data))addManufacturerData {
     return ^BabyPeripheralManager*(NSData *data) {
-        _manufacturerData = data;
+        self->_manufacturerData = data;
         return self;
     };
 }

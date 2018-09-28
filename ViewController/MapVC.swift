@@ -32,10 +32,10 @@ class MapVC: BaseViewController, CLLocationManagerDelegate{
         //var test2 = GeoNode(logitude: <#T##Double#>, latitude: <#T##Double#>)
         self.view = sailsMapView
         sails.setSailsLocationMapView(sailsMapView)
-        sails.loadCloudBuilding("11368c21cf464c1aa587b7ede79aab8b", buildingID: "5405920d1ff15731210001f3", success: (() -> Void)!{
+        sails.loadCloudBuilding("11368c21cf464c1aa587b7ede79aab8b", buildingID: "5405920d1ff15731210001f3", success: (() -> Void)?{
             self.sails.startLocatingEngine()
             let floorNameList = self.sails.getFloorNameList()
-            self.sailsMapView.loadFloorMap(floorNameList?[0] as! String!)
+            self.sailsMapView.loadFloorMap(floorNameList?[0] as! String?)
             self.sailsMapView.startAnimation(toZoom: 18)
             self.view.backgroundColor = UIColor.white
         }, failure: {(e:Error?)in })
