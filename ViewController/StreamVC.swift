@@ -75,7 +75,7 @@ class StreamVC: BaseViewController {
         self.view.addSubview(myWebView)
         //let url = NSURL(string:"http:192.168.0.101:8080"!)
         var url = self.getIPaddress()
-        url = "http://"+url + "/iGuiding/stream2.html"
+        url = "http://"+url + ":81"
         print(url)
         let urlRequest = NSURLRequest(url: URL(string: url)!)
         myWebView.loadRequest(urlRequest as URLRequest)

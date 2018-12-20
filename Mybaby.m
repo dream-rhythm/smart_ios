@@ -89,7 +89,7 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.title = @"我的寶貝";
+    self.title = @"My Baby";
     str = @"";
     [self initSails];
     [self initUI];
@@ -128,6 +128,22 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
     [myTimer invalidate];
     myTimer = nil;
 }
+- (NSString *) getDataFrom:(NSString *)url{
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    [request setHTTPMethod:@"GET"];
+    [request setURL:[NSURL URLWithString:url]];
+    
+    NSError *error = nil;
+    NSHTTPURLResponse *responseCode = nil;
+    
+    NSData *oResponseData = [NSURLConnection sendSynchronousRequest:request returningResponse:&responseCode error:&error];
+    
+    if([responseCode statusCode] != 200){
+        NSLog(@"Error getting %@, HTTP status code %i", url, [responseCode statusCode]);
+        return nil;
+    }
+    return [[NSString alloc] initWithData:oResponseData encoding:NSUTF8StringEncoding];
+}
 -(void)babyDelegate{
     
     
@@ -136,18 +152,18 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
         self->Name = peripheral.name;
         self->rssi = [RSSI intValue];
         if(self->rssi<0){
-            if([self->Name isEqualToString:@"WoodBeacon3"]==true){
+            if([self->Name isEqualToString:@"abeacon_3133"]==true){
             //專題研究室
     
                 self->Place_research+=self->rssi;
                 self->Times_research++;
         }
-            else if([self->Name isEqualToString:@"WoodBeacon2"]==true){
+            else if([self->Name isEqualToString:@"abeacon_3267"]==true){
             //三國
                 self->Place_3Global+=self->rssi;
                 self->Times_3Global++;
         }
-            else if([self->Name isEqualToString:@"HM-10"]==true){
+            else if([self->Name isEqualToString:@"HM-1^"]==true||[self->Name isEqualToString:@"HM-10"]==true){
                 self->place_HM+=[self calcDistByRSSI:self->place_HM];
                 self->HM_counter++;
                 if(self->baby_alert_range==3)self->baby_alert_range=0;
@@ -161,7 +177,7 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
             
             
         }
-            else if([self->Name isEqualToString:@"corner05"]==true){
+            else if([self->Name isEqualToString:@"abeacon_2B24"]==true){
             //無線網路研究室
                 self->Place_Lab+=self->rssi;
                 self->Times_Lab++;
@@ -169,6 +185,7 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
         }
         printf("搜索到了设备:%s(Rssi=%s)\n",[peripheral.name UTF8String],[[RSSI stringValue] UTF8String]);
         
+        //printf("Data=%s",);
     }];
     
     //过滤器
@@ -186,6 +203,7 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
         return NO;
     }];
 }
+
 -(void)alert_baby2{
     if(baby_alert_range==0){
         //alert_status++;
@@ -202,6 +220,7 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
         //[alert setAlertViewStyle:UIAlertViewStylePlainTextInput];
         [alert show];
         [self sound];
+        NSLog(@"Message == %@",[self getDataFrom:@"http://192.168.43.197/iBaby/getPlace.php?user=ipad"]);
     }
     
 }
@@ -291,8 +310,6 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
             NSError * error = nil;
             [self->clientSocket disconnect];
             [self->clientSocket connectToHost:IPAddress onPort:7777 error:&error];
-            //[self->clientSocket writeData:[@"{\"userPasswd\":\"T00234\",\"userName\":\"T00234\"}\r\n" dataUsingEncoding:NSUTF8StringEncoding] withTimeout:-1 tag:0];
-            //[self->clientSocket readDataWithTimeout:-1 tag:0];
             break;
     }
 }
@@ -326,17 +343,7 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
         Times_research=1;
     }
     if(scan_counter!=10){
-        /*
-        if(Place_3Global==-100&&Place_Lab==-100&&Place_research==-100);
-        else if(Place_3Global>=Place_Lab&&Place_3Global>=Place_research){
-            Times_3Global++;
-        }
-        else if(Place_Lab>=Place_research&&Place_Lab>=Place_3Global){
-            Times_Lab++;
-        }
-        else if(Place_research>=Place_3Global&&Place_research>=Place_Lab){
-            Times_research++;
-        }*/
+        
         //printf("rssi(%d,%d,%d,%d)\n",Place_research,Place_3Global,Place_Lab,place_HM);
         //printf("times(%d,%d,%d)\n",Times_research,Times_3Global,Times_Lab);
         scan_counter++;
@@ -382,19 +389,23 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
             //專題研究室
             a =[sails getLocationRegionList:@"2"][76];
             now=76;
+            [self getDataFrom:@"http://192.168.43.197/iBaby/writePlace.php?user=iphone&place=76"];
         }
         else if((float)Place_3Global/Times_3Global>=(float)Place_Lab/Times_Lab&&(float)Place_3Global/Times_3Global>=(float)Place_research/Times_research){
             //三國
             a =[sails getLocationRegionList:@"2"][84];
             now=84;
+            [self getDataFrom:@"http://192.168.43.197/iBaby/writePlace.php?user=iphone&place=84"];
         }
         else{
             //無線網路研究室
             a =[sails getLocationRegionList:@"2"][83];
             now=83;
+            [self getDataFrom:@"http://192.168.43.197/iBaby/writePlace.php?user=iphone&place=83"];
         }
         [baby3 cancelScan];
         //[self->clientSocket writeData:[@"{\"status\":2}\r\n" dataUsingEncoding:NSUTF8StringEncoding] withTimeout:-1 tag:0];
+        
         scan_counter=0;
         myTimer=[NSTimer scheduledTimerWithTimeInterval:0.1
                                                  target:self
@@ -439,7 +450,19 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
         findBaby=1;
         a=[sails getLocationRegionList:@"2"][now];
         [self setStartPlace2: a];
-        [self->clientSocket writeData:[@"{\"status\":2}\r\n" dataUsingEncoding:NSUTF8StringEncoding] withTimeout:-1 tag:0];
+        //[self->clientSocket writeData:[@"{\"status\":2}\r\n" dataUsingEncoding:NSUTF8StringEncoding] withTimeout:-1 tag:0];
+        //now = [[self getDataFrom:@"http://192.168.43.197/iBaby/getPlace.php?user=iphone"] intValue];
+        int tmp=[[self getDataFrom:@"http://192.168.43.197/iBaby/getPlace.php?user=ipad"] intValue];
+        [self setEndPlace:  [sails getLocationRegionList:@"2"][tmp]];
+        if(tmp==76){
+            Place.text=@"專題研究室 - Topics Reasearch";
+        }
+        else if(tmp==84){
+            Place.text = @"第三國際會議廳 - 3th International Conference Hall";
+        }
+        else if(tmp==83){
+            Place.text = @"無線網路實驗室 - Wireless Network Lab";
+        }
         [self alert_baby2];
     }
     HM_counter=0;
@@ -531,7 +554,7 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
 }
 -(void)setStartPlace2:(LocationRegion*)location
 {
-    [self->clientSocket writeData:[@"{\"status\":2}\r\n" dataUsingEncoding:NSUTF8StringEncoding] withTimeout:-1 tag:0];
+    //[self->clientSocket writeData:[@"{\"status\":2}\r\n" dataUsingEncoding:NSUTF8StringEncoding] withTimeout:-1 tag:0];
     //[sailsMarkerManager clearMarkers];
     [sailsPathRoutingManager setStartRegion:location];
     [sailsMarkerManager setLocationRegionMarker:location andImage:[UIImage imageNamed:@"start_point"] andMarkerFrame:48 andIsBoundCenter:true];
@@ -582,8 +605,9 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
 }
 -(void)setEndPlace:(LocationRegion*)location
 {
-    [self->clientSocket writeData:[@"{\"status\":2}\r\n" dataUsingEncoding:NSUTF8StringEncoding] withTimeout:-1 tag:0];
+    //[self->clientSocket writeData:[@"{\"status\":2}\r\n" dataUsingEncoding:NSUTF8StringEncoding] withTimeout:-1 tag:0];
     //[sailsMarkerManager clearMarkers];
+    //now = [[self getDataFrom:@"http://192.168.43.197/iBaby/getPlace.php?user=iphone"] intValue];
     [sailsPathRoutingManager setStartRegion:[sails getLocationRegionList:@"2"][now]];
     [sailsMarkerManager setLocationRegionMarker:[sails getLocationRegionList:@"2"][now] andImage:[UIImage imageNamed:@"start_point"] andMarkerFrame:48 andIsBoundCenter:true];
     //[self->clientSocket writeData:[[NSString stringWithFormat:@"{\"status\":1,\"location\":\"%@\"}\r\n",[location  label]] dataUsingEncoding:NSUTF8StringEncoding] withTimeout:-1 tag:0];
@@ -724,14 +748,25 @@ typedef NS_ENUM(NSInteger, UIActionSheetMode) {
     else{
         str = string;
         if(findBaby==1){
-            NSString * tmp = [[str componentsSeparatedByString:@"location\":\""] objectAtIndex:1];
-            tmp = [tmp substringToIndex:[tmp rangeOfString:@"\",\"user"].location];
-            if([tmp isEqual:@"unknown"])tmp=@"院共同實驗室College Common Lab";
-            [self setEndPlace:  [sails getLocationRegionList:@"2"][[self FindIndexByName:tmp]]];
-            Place.text=tmp;
+            //NSString * tmp = [[str componentsSeparatedByString:@"location\":\""] objectAtIndex:1];
+            //tmp = [tmp substringToIndex:[tmp rangeOfString:@"\",\"user"].location];
+            //if([tmp isEqual:@"unknown"])tmp=@"院共同實驗室College Common Lab";
+            //[self setEndPlace:  [sails getLocationRegionList:@"2"][[self FindIndexByName:tmp]]];
+            int tmp=[[self getDataFrom:@"http://192.168.43.197/iBaby/getPlace.php?user=ipad"] intValue];
+            [self setEndPlace:  [sails getLocationRegionList:@"2"][tmp]];
+            if(tmp==76){
+                Place.text=@"專題研究室 - Topics Reasearch";
+            }
+            else if(tmp==84){
+                Place.text = @"第三國際會議廳 - 3th International Conference Hall";
+            }
+            else if(tmp==83){
+                Place.text = @"無線網路實驗室 - Wires";
+            }
+            //Place.text=tmp;
         }
     }
-    [self->clientSocket readDataWithTimeout:-1 tag:0];
+    //[self->clientSocket readDataWithTimeout:-1 tag:0];
     
 }
 

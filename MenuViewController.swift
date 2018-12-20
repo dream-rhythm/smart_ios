@@ -63,13 +63,13 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         arrayMenuOptions.append(["title":"Home", "icon":"HomeIcon"])
         arrayMenuOptions.append(["title":"Login","icon":"LoginIcon"])
-        arrayMenuOptions.append(["title":"查看地圖", "icon":"MapIcon"])
+        arrayMenuOptions.append(["title":"Maps", "icon":"MapIcon"])
         //arrayMenuOptions.append(["title":"Campus Guide","icon":"NagivationIcon"])
         //arrayMenuOptions.append(["title":"Find Friend","icon":"FindFriendIcon"])
         arrayMenuOptions.append(["title":"My Video","icon":"StudentIcon"])
         arrayMenuOptions.append(["title":"Live Sense","icon":"StreamIcon"])
         //arrayMenuOptions.append(["title":"SOS","icon":"EmergencyIcon"])
-        arrayMenuOptions.append(["title":"我的寶貝","icon":"BabyIcon"])
+        arrayMenuOptions.append(["title":"My Baby","icon":"BabyIcon"])
         //arrayMenuOptions.append(["title":"系統設定","icon":"SettingIcon"])
         
         tblMenuOptions.reloadData()

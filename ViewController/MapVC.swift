@@ -18,7 +18,7 @@ class MapVC: BaseViewController, CLLocationManagerDelegate{
     override func viewDidLoad() {
         super.viewDidLoad()
         self.addSlideMenuButton()
-        self.title="School Guide"
+        self.title="Maps"
        
         locationManager.delegate = self
         

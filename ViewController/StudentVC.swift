@@ -11,6 +11,7 @@ import AVKit
 import AVFoundation
 import CoreData
 
+
 class StudentVC: BaseViewController,UITableViewDelegate,UITableViewDataSource{
     var user:User?
     let screenSize: CGRect = UIScreen.main.bounds
@@ -75,18 +76,16 @@ class StudentVC: BaseViewController,UITableViewDelegate,UITableViewDataSource{
     @IBAction func GoToSOS(_ sender: Any) {
         self.openViewControllerBasedOnIdentifier("EmergencyVC")
     }
-    func reloadTable(){
-        user?.sendStatus(statusNumber: 15)
-        let msg = user?.getData()
-        print(msg ?? "(nil)")
+    func reloadTable(msg:String){
+        
         if(msg==""){
             
         }
         else{
-            let videoNames = msg?.components(separatedBy: ",")
+            let videoNames = msg.components(separatedBy: ",")
             //videoNames = videoNames?.removeLast()
             dataArr = NSMutableArray()
-            for element in videoNames! {
+            for element in videoNames {
                 if(element=="\r\n"){
                     
                 }
@@ -111,8 +110,8 @@ class StudentVC: BaseViewController,UITableViewDelegate,UITableViewDataSource{
             self.presentedViewController?.dismiss(animated: false, completion: nil)
         }*/
         
-        if(self.getIPaddress()=="192.168.43.105"){
-            reloadTable()
+        if(self.getIPaddress()=="192.168.43.197"){
+            //reloadTable()
             Timer.scheduledTimer(timeInterval: 1, target : self, selector : #selector(StudentVC.loadData), userInfo : nil, repeats : false)
             //Thread.sleep(forTimeInterval: 1.5)
             
@@ -126,15 +125,23 @@ class StudentVC: BaseViewController,UITableViewDelegate,UITableViewDataSource{
             alertController2.addAction(okAction)
             self.present(alertController2, animated: true, completion: nil)
         }
+        let url = URL(string: "http://"+self.getIPaddress()+"/iBaby/getVideo.php")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        NSURLConnection.sendAsynchronousRequest(request, queue: OperationQueue.main) {(response, data, error) in
+            guard let data = data else { return }
+            print(String(data: data, encoding: .utf8)!)
+            self.reloadTable(msg:String(data: data, encoding: .utf8)!)
+        }
     }
     func loadData(){
-        reloadTable()
+        
         let alertController2 = UIAlertController(title: "Message",
                                                  message: "Load Succes", preferredStyle: .alert)
         
         let okAction = UIAlertAction(title: "OK", style: .default, handler: {
             (action: UIAlertAction!) -> Void in
-            self.reloadTable()
+            //self.reloadTable()
             self.tableView.reloadData()
         })
         alertController2.addAction(okAction)
@@ -173,10 +180,18 @@ class StudentVC: BaseViewController,UITableViewDelegate,UITableViewDataSource{
         //let url = NSURL(string:"http:192.168.0.101:8080"!)
         
         self.setVideoByName(VideoName: "pleaseChoose.html")
+        let url = URL(string: "http://"+self.getIPaddress()+"/iBaby/getVideo.php")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        NSURLConnection.sendAsynchronousRequest(request, queue: OperationQueue.main) {(response, data, error) in
+            guard let data = data else { return }
+            print(String(data: data, encoding: .utf8)!)
+            self.reloadTable(msg:String(data: data, encoding: .utf8)!)
+        }
     }
     func setVideoByName(VideoName:String){
         var url = self.getIPaddress()
-        url = "http://"+url + "/iGuiding/"+VideoName
+        url = "http://"+url + "/iGuiding/video/"+VideoName
         print(url)
         let urlRequest = NSURLRequest(url: URL(string: url)!)
         myWebView.loadRequest(urlRequest as URLRequest)
